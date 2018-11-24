@@ -143,18 +143,22 @@ async function getPokemonFromGenre(genre) {
   };
   const pokemonJSON = await getPokemonType(match[genre] || 'normal');
   var pokeAmount = pokemonJSON.pokemon.length;
-  var randPokemonID = Math.round(Math.random() * (pokeAmount-1) + 0);
-  var randPokemon = pokemonJSON.pokemon[randPokemonID].pokemon.name;
-  const pokemon = await getPokemonDetails(randPokemon);
-  console.log(pokemon)
+  let randPokemonID, randPokemon, pokemon, sprite;
+  do{
+      randPokemonID = Math.round(Math.random() * (pokeAmount-1));
+      randPokemon = pokemonJSON.pokemon[randPokemonID].pokemon.name;
+      pokemon = await getPokemonDetails(randPokemon);
+      sprite = pokemon.sprites.front_default;
+  }while (sprite === null);
+
+  console.log(pokemon);
   return pokemon;
 }
 
 export async function getPokemonFromTrack(track) {
   const artistId = track.track.artists[0].id;
   const genres = await getArtistGenres(artistId);
-  const pokemon = await getPokemonFromGenre((genres[0] || '').split(' ')[0]);
-  return pokemon;
+  return await getPokemonFromGenre((genres[0] || '').split(' ')[0]);
 }
 
 //export async function getPokemonFromGenre(genre) {

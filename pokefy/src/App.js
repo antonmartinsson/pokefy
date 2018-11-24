@@ -3,6 +3,7 @@ import * as api from './api';
 import './App.css';
 import Grid from './modules/grid';
 import bulba from './bulba.png';
+import PokeGame from "./modules/pokeGame";
 
 class App extends Component {
   constructor(props) {
@@ -87,7 +88,7 @@ class App extends Component {
       return (
         <div className='App'>
           <header className='App-header'>
-            <img src={this.state.currentPokemon.sprites.front_default} />
+              <PokeGame action={this.moveToGrid} pokemon={this.state.currentPokemon}/>
           </header>
         </div>
       );
