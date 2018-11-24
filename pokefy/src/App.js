@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import * as api from './api';
 import './App.css';
 import Grid from './modules/grid';
-import bulba from './bulba.png';
-import PokeGame from "./modules/pokeGame";
+import PokeGame from './modules/pokeGame';
 
 class App extends Component {
   constructor(props) {
@@ -11,7 +10,8 @@ class App extends Component {
     this.state = {
       gameState: 'login',
       recentTracks: [],
-      currentPokemon: null
+      currentPokemon: null,
+      playedTrackIds: {},
     };
 
     this.moveToGame = this.moveToGame.bind(this);
@@ -54,11 +54,12 @@ class App extends Component {
     this.getRecent();
   };
 
-  moveToGame = pokemon => {
-    this.setState({
+  moveToGame = (pokemon, trackId) => {
+    this.setState(state => ({
       gameState: 'game',
       currentPokemon: pokemon,
-    });
+      playedTrackIds: { ...state.playedTrackIds, [trackId]: true },
+    }));
   };
 
   render() {
@@ -81,14 +82,18 @@ class App extends Component {
     else if (this.state.gameState === 'grid')
       return (
         <div className='App'>
-          <Grid action={this.moveToGame} tracks={this.state.recentTracks} />
+          <Grid
+            action={this.moveToGame}
+            playedTrackIds={this.state.playedTrackIds}
+            tracks={this.state.recentTracks}
+          />
         </div>
       );
     else if (this.state.gameState === 'game')
       return (
         <div className='App'>
           <header className='App-header'>
-              <PokeGame action={this.moveToGrid} pokemon={this.state.currentPokemon}/>
+            <PokeGame action={this.moveToGrid} pokemon={this.state.currentPokemon} />
           </header>
         </div>
       );
