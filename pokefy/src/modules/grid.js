@@ -4,6 +4,7 @@ import album from '../album.jpg';
 import bulba from '../bulba.png';
 import char from '../char.png';
 import PropTypes from 'prop-types';
+import './grid.css';
 
 class Grid extends Component{
 
@@ -151,6 +152,7 @@ class Grid extends Component{
                 <h3>{this.state.title}</h3>
                 <button disabled={!this.state.readyForGame} onClick={this.props.action}>Start playing</button>
                 <br/>
+                <div className="song-grid">
                 {
                     tracks.slice(0, 10).map(track => (
                         <div key={track.played_at}>
@@ -159,6 +161,7 @@ class Grid extends Component{
                         </div>
                     ))
                 }
+                </div>
                 {/*
                 <img src={this.state.imgSrc1} onClick={this.handleClick1} className="Grid-img"/>
                 <h3>{this.state.songTitle}</h3>

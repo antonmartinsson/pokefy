@@ -70,9 +70,7 @@ class App extends Component {
     else if (this.state.gameState === 'grid')
       return (
         <div className='App'>
-          <header className='App-header'>
-            <Grid action={this.moveToGame} tracks={this.state.recentTracks} />
-          </header>
+          <Grid action={this.moveToGame} tracks={this.state.recentTracks} />
         </div>
       );
     else if (this.state.gameState === 'game')

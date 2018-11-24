@@ -1,6 +1,5 @@
 .App {
   text-align: center;
-  background: -webkit-gradient(linear, left top, right bottom, from(black), to(white));
 }
 
 .App-logo {
@@ -9,14 +8,12 @@
 }
 
 .App-header {
-  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
 }
 
 .App-link {
@@ -32,16 +29,11 @@
   }
 }
 
-.Grid-img{
+.Grid-img {
   display: inline-grid;
-  max-width: 300px;
-  max-height: 300px;
-
+  max-width: 100%;
 }
 
-.Grid {
-  background: -webkit-gradient(linear, left top, right bottom, from(black), to(white));
-
+.btn:disabled {
+  color: blue;
 }
-
-.btn:disabled{color: blue}
