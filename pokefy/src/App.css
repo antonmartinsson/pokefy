@@ -8,6 +8,7 @@
 }
 
 .App-header {
+  background-color: #F69697;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -15,6 +16,19 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
 }
+
+.logoDiv {
+  border: 0;
+  float: left;
+  position: relative;
+} 
+
+.pokeball {
+  border: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+ } 
 
 .App-link {
   color: #61dafb;
@@ -37,3 +51,35 @@
 .btn:disabled {
   color: blue;
 }
+
+.pressPokeBall {
+  font-weight: bold;
+   -webkit-animation: flickerAnimation 3s infinite;
+   -moz-animation: flickerAnimation 3s infinite;
+   -o-animation: flickerAnimation 3s infinite;
+    animation: flickerAnimation 3s infinite;
+}
+
+
+@keyframes flickerAnimation {
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@-o-keyframes flickerAnimation{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@-moz-keyframes flickerAnimation{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@-webkit-keyframes flickerAnimation{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+
+
