@@ -23,3 +23,14 @@ export async function getArtistGenres(artistId) {
   const json = await res.json();
   return json.body.genres;
 }
+
+export async function getPokemonFromTrack(track) {
+  const artistId = track.track.artists[0].id;
+  const genres = await getArtistGenres(artistId);
+  const pokemon = await getPokemonFromGenre(genres[0]);
+  return pokemon;
+}
+
+export async function getPokemonFromGenre(genre) {
+  return {};
+}
