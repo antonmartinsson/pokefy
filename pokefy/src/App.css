@@ -118,11 +118,34 @@
 }
 
 .player-container{
-  float: left;
+  display: grid;
+  grid-gap: 50px;
+  grid-template-columns: 500px 500px;
 }
 
-.enemy-container{
+.player-img {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 30px;
+  transform: scaleX(-1);
+}
 
+.enemy-img {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 30px;
+
+}
+
+.attack-button {
+  border: solid;
+  margin: 2px 2px 2px;
+  min-height: 40px;
+  width: 200px;
+  font-family: Raleway, serif;
+  font-weight: bold;
+  background: transparent;
+  color: white;
 }
 
 
