@@ -8,7 +8,7 @@ const localStorage = new LocalStorage('./localStorage');
 const app = express();
 const PORT = 5000;
 
-const spotifyScopes = ['user-read-recently-played'];
+const spotifyScopes = ['user-read-recently-played', 'user-modify-playback-state'];
 const redirectUri = 'http://localhost:3000';
 const state = 'randomstatelol';
 
@@ -74,6 +74,12 @@ app.get('/spotify/get-genre/:artistId', async (req, res) => {
   const data = await spotifyApi.getArtist(artistId);
   console.log(data);
   res.status(200).send(data);
+});
+
+app.get('/spotify/play/:songId', async (req, res) => {
+  console.log('GET /spotify/play/' + req.params.songId);
+  const { songId } = req.params;
+  spotifyApi.play({ uris: ['spotify:track:' + songId] });
 });
 
 app.listen(PORT, () => {

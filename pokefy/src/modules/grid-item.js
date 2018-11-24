@@ -18,6 +18,7 @@ class GridItem extends Component {
         clicked: true,
       });
     }
+    api.playSong(this.props.track.track.id);
     this.moveToGame();
   }
 

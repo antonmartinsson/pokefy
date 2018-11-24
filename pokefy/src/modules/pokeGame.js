@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import * as api from '../api';
 import '../App.css';
 
 const NO_MOVES = 4;
@@ -25,21 +26,6 @@ const initialState = {
     isLoaded: false,
     winner: null
 };
-
-async function getType(typeName) {
-    const typeRes = await fetch('http://pokeapi.co/api/v2/type/' + typeName);
-    return await typeRes.json();
-}
-
-async function getDetails(pokeName) {
-    const pokemonRes = await fetch('http://pokeapi.co/api/v2/pokemon/' + pokeName);
-    return await pokemonRes.json();
-}
-
-async function getMoveInformation(moveName) {
-    const moveRes = await fetch('https://pokeapi.co/api/v2/move/' + moveName);
-    return await moveRes.json();
-}
 
 class PokeGame extends Component {
     constructor(props) {
@@ -117,7 +103,7 @@ class PokeGame extends Component {
              .sort((a, b) => a.r - b.r)
              .map(a => a.x)
              .slice(0, NO_MOVES);
-         moves = await Promise.all(moves.map(move => getMoveInformation(move.move.name)));
+         moves = await Promise.all(moves.map(move => api.getMoveInformation(move.move.name)));
 
          console.log(moves);
 
