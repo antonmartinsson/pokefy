@@ -9,7 +9,8 @@ class App extends Component {
   constructor(props) {
       super(props);
       this.state = {
-        gameState: 'login'
+        gameState: 'login',
+          recentTracks: []
       }
 
       this.moveToGame = this.moveToGame.bind(this);
@@ -37,12 +38,14 @@ class App extends Component {
     const data = await fetch('/spotify/recent-tracks');
     const json = await data.json();
     console.log(json.body.items.map(item => item.track.name));
+    this.setState({recentTracks: json.body.items});
   };
 
     moveToGrid = () => {
         this.setState({
             gameState: 'grid'
         });
+        this.getRecent();
     };
 
     moveToGame = () => {
@@ -64,7 +67,7 @@ class App extends Component {
         return (
             <div className="App">
                 <header className="App-header">
-                  <Grid action={this.moveToGame}/>
+                  <Grid action={this.moveToGame} tracks={this.state.recentTracks}/>
                 </header>
           </div>
         );
