@@ -79,6 +79,7 @@ app.get('/spotify/get-genre/:artistId', async (req, res) => {
 app.get('/spotify/play/:songId', async (req, res) => {
   console.log('GET /spotify/play/' + req.params.songId);
   const { songId } = req.params;
+  await spotifyApi.setRepeat({ state: 'track' });
   spotifyApi.play({ uris: ['spotify:track:' + songId] });
 });
 
