@@ -63,7 +63,11 @@ class App extends Component {
       return (
         <div className='App'>
           <header className='App-header'>
-            <button onClick={this.moveToGrid}>Click me!</button>
+          <div class='logoDiv'>
+            <img src='https://i.imgur.com/xBo8wTW.png'/>
+            <img class='pokeball' src='https://i.imgur.com/a6eN9Ix.png' onClick={this.moveToGrid}/>
+          </div>
+            <p class='pressPokeBall'>Press the Poké Ball to begin</p>
           </header>
         </div>
       );
