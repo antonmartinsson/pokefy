@@ -52,9 +52,10 @@ class App extends Component {
     this.getRecent();
   };
 
-  moveToGame = () => {
+  moveToGame = pokemon => {
     this.setState({
       gameState: 'game',
+      currentPokemon: pokemon,
     });
   };
 
@@ -63,11 +64,15 @@ class App extends Component {
       return (
         <div className='App'>
           <header className='App-header'>
-          <div class='logoDiv'>
-            <img src='https://i.imgur.com/xBo8wTW.png'/>
-            <img class='pokeball' src='https://i.imgur.com/a6eN9Ix.png' onClick={this.moveToGrid}/>
-          </div>
-            <p class='pressPokeBall'>Press the Poké Ball to begin</p>
+            <div className='logoDiv'>
+              <img src='https://i.imgur.com/xBo8wTW.png' />
+              <img
+                className='pokeball'
+                src='https://i.imgur.com/a6eN9Ix.png'
+                onClick={this.moveToGrid}
+              />
+            </div>
+            <p className='pressPokeBall'>Press the Poké Ball to begin</p>
           </header>
         </div>
       );
