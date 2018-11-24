@@ -96,4 +96,12 @@
   100% { opacity:1; }
 }
 
+.player-container{
+  float: left;
+}
+
+.enemy-container{
+
+}
+
 

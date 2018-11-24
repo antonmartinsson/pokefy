@@ -161,25 +161,48 @@ class PokeGame extends Component {
             <div>
                 {this.state.isLoaded && !this.state.winner && (
                     <div>
-                        <div>
-                            <h3>{'Player picked: ' + this.state.player.pokemon.name}</h3>
+                        <div className="player-container">
                             <div>
-                                <img src={this.state.player.sprite} width='200px' height='200px' margin-bottom='-50px'/>
-                                <br/>
-                                {this.state.player.pokeName}
+                                <h3>{'Player picked: ' + this.state.player.pokemon.name}</h3>
+                                <div>
+                                    <img src={this.state.player.sprite} width='200px' height='200px' margin-bottom='-50px'/>
+                                    <br/>
+                                    {this.state.player.pokeName}
+                                </div>
+                            </div>
+                            <div>
+                                {this.state.player.moves.map(move => (
+                                    <button key={'move' + move.id}
+                                            onClick={() => this.toggleMove(move)}>{move.name}</button>
+                                ))}
+                            </div>
+                            <div>
+                                <h3>{'Players health: ' + this.state.player.health}</h3>
+                                <h3>{'Computer health: ' + this.state.computer.health}</h3>
                             </div>
                         </div>
-                        <div>
-                            {this.state.player.moves.map(move => (
-                                <button key={'move' + move.id}
-                                        onClick={() => this.toggleMove(move)}>{move.name}</button>
-                            ))}
-                        </div>
-                        <div>
-                            <h3>{'Players health: ' + this.state.player.health}</h3>
-                            <h3>{'Computer health: ' + this.state.computer.health}</h3>
+                        <div className="player-container">
+                            <div>
+                                <h3>{'Player picked: ' + this.state.player.pokemon.name}</h3>
+                                <div>
+                                    <img src={this.state.player.sprite} width='200px' height='200px' margin-bottom='-50px'/>
+                                    <br/>
+                                    {this.state.player.pokeName}
+                                </div>
+                            </div>
+                            <div>
+                                {this.state.player.moves.map(move => (
+                                    <button key={'move' + move.id}
+                                            onClick={() => this.toggleMove(move)}>{move.name}</button>
+                                ))}
+                            </div>
+                            <div>
+                                <h3>{'Players health: ' + this.state.player.health}</h3>
+                                <h3>{'Computer health: ' + this.state.computer.health}</h3>
+                            </div>
                         </div>
                     </div>
+
                 )}
 
                 {this.state.isLoaded && this.state.winner && (
