@@ -17,3 +17,9 @@ export async function login() {
     window.location = authUrl;
   }
 }
+
+export async function getArtistGenres(artistId) {
+  const res = await fetch('/spotify/get-genre/' + artistId);
+  const json = await res.json();
+  return json.body.genres;
+}
