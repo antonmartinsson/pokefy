@@ -137,6 +137,23 @@
 
 }
 
+progress[value] {
+  -webkit-appearance: none;
+   appearance: none;
+   height: 15px;
+}
+
+progress[value]::-webkit-progress-bar {
+  background-color: #E4E4E4;
+  display: inline-block;
+  border-radius: 50px;
+}
+
+progress[value]::-webkit-progress-value {
+  background-color: #11FD00;
+  border-radius: 50px;
+}
+
 .attack-button {
   border: solid;
   margin: 2px 2px 2px;
@@ -147,5 +164,4 @@
   background: transparent;
   color: white;
 }
-
 
