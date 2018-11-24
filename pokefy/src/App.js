@@ -1,9 +1,20 @@
 import React, { Component } from 'react';
 import * as api from './api';
-import logo from './logo.svg';
 import './App.css';
+import Grid from "./modules/grid";
+import bulba from './bulba.png';
 
 class App extends Component {
+
+  constructor(props) {
+      super(props);
+      this.state = {
+        gameState: 'login'
+      }
+
+      this.moveToGame = this.moveToGame.bind(this);
+  }
+  
   async componentDidMount() {
     await this.authorize();
   }
@@ -28,27 +39,44 @@ class App extends Component {
     console.log(json.body.items.map(item => item.track.name));
   };
 
-  render() {
-    return (
-      <div className='App'>
-        <header className='App-header'>
-          <img src={logo} className='App-logo' alt='logo' />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className='App-link'
-            href='https://reactjs.org'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            Learn React
-          </a>
-          <button onClick={this.getRecent}>Get recents</button>
-        </header>
-      </div>
-    );
-  }
+    moveToGrid = () => {
+        this.setState({
+            gameState: 'grid'
+        });
+    };
+
+    moveToGame = () => {
+        this.setState({
+            gameState: 'game'
+        });
+    };
+
+    render() {
+    if (this.state.gameState === 'login')
+        return (
+            <div className="App">
+                <header className="App-header">
+                  <button onClick={this.moveToGrid}>Click me!</button>
+                </header>
+            </div>
+        );
+    else if (this.state.gameState === 'grid')
+        return (
+            <div className="App">
+                <header className="App-header">
+                  <Grid action={this.moveToGame}/>
+                </header>
+          </div>
+        );
+    else if (this.state.gameState === 'game')
+        return (
+            <div className="App">
+                <header className="App-header">
+                    <img src={bulba}/>
+                </header>
+            </div>
+        );
+    }
 }
 
 export default App;
