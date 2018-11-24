@@ -1,0 +1,11 @@
+.song-grid {
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  max-width: 1200px;
+  margin: 20px auto 0 auto;
+}
+
+.song-grid h3 {
+  font-size: 16px;
+}
