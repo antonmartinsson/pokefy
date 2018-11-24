@@ -1,3 +1,10 @@
+html {
+  background: linear-gradient(315deg, rgb(232, 51, 52), rgb(254, 219, 209));
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  padding-bottom: 100px;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -6,7 +13,6 @@ body {
     'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;*/
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(315deg, rgb(232, 51, 52), rgb(254, 219, 209));
   color: white;
 }
 

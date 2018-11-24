@@ -1,12 +1,10 @@
 .App {
   text-align: center;
-  background: linear-gradient(315deg, rgb(232, 51, 52), rgb(254, 219, 209));
-  position: absolute;
+  /* position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
-  right: 0;
-
+  right: 0; */
 }
 
 .App-logo {
@@ -15,7 +13,6 @@
 }
 
 .App-header {
-  background: linear-gradient(315deg, rgb(232, 51, 52), rgb(254, 219, 209));
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -28,14 +25,14 @@
   border: 0;
   float: left;
   position: relative;
-} 
+}
 
 .pokeball {
   border: 0;
   position: absolute;
   top: 0;
   right: 0;
- } 
+}
 
 .App-link {
   color: #61dafb;
@@ -54,7 +51,7 @@
   display: inline-grid;
   max-width: 100%;
   -webkit-filter: brightness(90%);
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 .Grid-img:hover {
@@ -68,32 +65,53 @@
 
 .pressPokeBall {
   font-weight: bold;
-   -webkit-animation: flickerAnimation 3s infinite;
-   -moz-animation: flickerAnimation 3s infinite;
-   -o-animation: flickerAnimation 3s infinite;
-    animation: flickerAnimation 3s infinite;
+  -webkit-animation: flickerAnimation 3s infinite;
+  -moz-animation: flickerAnimation 3s infinite;
+  -o-animation: flickerAnimation 3s infinite;
+  animation: flickerAnimation 3s infinite;
 }
-
 
 @keyframes flickerAnimation {
-  0%   { opacity:1; }
-  50%  { opacity:0; }
-  100% { opacity:1; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
-@-o-keyframes flickerAnimation{
-  0%   { opacity:1; }
-  50%  { opacity:0; }
-  100% { opacity:1; }
+@-o-keyframes flickerAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
-@-moz-keyframes flickerAnimation{
-  0%   { opacity:1; }
-  50%  { opacity:0; }
-  100% { opacity:1; }
+@-moz-keyframes flickerAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
-@-webkit-keyframes flickerAnimation{
-  0%   { opacity:1; }
-  50%  { opacity:0; }
-  100% { opacity:1; }
+@-webkit-keyframes flickerAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
-
-
