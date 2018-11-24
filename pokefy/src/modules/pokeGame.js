@@ -194,7 +194,8 @@ class PokeGame extends Component {
                 {this.state.isLoaded && this.state.winner && (
                     <div>
                         {'Winner is: ' + this.state.winner.name}
-                        <button onClick={this.props.action}>{"NEXT!"}</button>
+                    <br/>
+                        <button className="attack-button" onClick={this.props.action}>{"NEXT!"}</button>
                     </div>
                 )}
             </div>
