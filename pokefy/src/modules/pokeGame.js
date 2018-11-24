@@ -26,18 +26,18 @@ const initialState = {
     winner: null
 };
 
-async function getType(type) {
-    const typeRes = await fetch('http://pokeapi.co/api/v2/type/' + type);
+async function getType(typeName) {
+    const typeRes = await fetch('http://pokeapi.co/api/v2/type/' + typeName);
     return await typeRes.json();
 }
 
-async function getDetails(randPokemon) {
-    const pokemonRes = await fetch('http://pokeapi.co/api/v2/pokemon/' + randPokemon);
+async function getDetails(pokeName) {
+    const pokemonRes = await fetch('http://pokeapi.co/api/v2/pokemon/' + pokeName);
     return await pokemonRes.json();
 }
 
-async function getMoveInformation(moveID) {
-    const moveRes = await fetch('https://pokeapi.co/api/v2/move/' + moveID);
+async function getMoveInformation(moveName) {
+    const moveRes = await fetch('https://pokeapi.co/api/v2/move/' + moveName);
     return await moveRes.json();
 }
 
@@ -47,7 +47,7 @@ class PokeGame extends Component {
         this.state = initialState
     }
 
-    play(attackPlayer, defensePlayer, attackMove) {
+    static play(attackPlayer, defensePlayer, attackMove) {
         var damage = ((2 * attackPlayer.level) / 5) + 2;
         // Pokemon damage stat
         damage *= attackPlayer.pokemon.stats[5].base_stat;
@@ -61,7 +61,7 @@ class PokeGame extends Component {
 
     toggleMove(attackMove) {
         //Player's move
-        var computerDefenseHealth = this.play(this.state.player, this.state.computer, attackMove);
+        var computerDefenseHealth = PokeGame.play(this.state.player, this.state.computer, attackMove);
         if (computerDefenseHealth < 0) {
             this.setState({winner: this.state.player});
             return;
@@ -69,7 +69,7 @@ class PokeGame extends Component {
 
         // Computer's move
         attackMove = this.state.computer.moves[Math.floor(Math.random()*NO_MOVES)];
-        var playerDefenseHealth = this.play(this.state.computer, this.state.player, attackMove);
+        var playerDefenseHealth = PokeGame.play(this.state.computer, this.state.player, attackMove);
         if (playerDefenseHealth < 0) {
             this.setState({winner: this.state.computer});
             return;
