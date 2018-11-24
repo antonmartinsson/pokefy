@@ -162,46 +162,46 @@ class PokeGame extends Component {
         return (
             <div>
                 {this.state.isLoaded && !this.state.winner && (
-                    <div>
-                        <div className="player-container">
+                    <div className="player-container">
+                        <div>
                             <div>
                                 <h3>{'Player picked: ' + this.state.player.pokemon.name}</h3>
                                 <div>
-                                    <img src={this.state.player.sprite} width='200px' height='200px' margin-bottom='-50px'/>
+                                    <img src={this.state.player.sprite} className="player-img"/>
                                     <br/>
-                                    {this.state.player.pokeName}
+                                    <h3>{this.state.player.pokeName}</h3>
                                 </div>
                             </div>
                             <div>
                                 {this.state.player.moves.map(move => (
                                     <button key={'move' + move.id}
-                                            onClick={() => this.toggleMove(move)}>{move.name}</button>
+                                            onClick={() => this.toggleMove(move)}
+                                            className="attack-button">{move.name}</button>
                                 ))}
                             </div>
                             <div>
                                 <progress id="playerHealth" value="100" max="100"></progress>
                                 <h3>{'Players health: ' + this.state.player.health}</h3>
-                                <h3>{'Computer health: ' + this.state.computer.health}</h3>
                             </div>
                         </div>
-                        <div className="player-container">
+                        <div>
                             <div>
-                                <h3>{'Player picked: ' + this.state.player.pokemon.name}</h3>
+                                <h3>{'Enemy picked: ' + this.state.player.pokemon.name}</h3>
                                 <div>
-                                    <img src={this.state.player.sprite} width='200px' height='200px' margin-bottom='-50px'/>
+                                    <img src={this.state.player.sprite} className="enemy-img"/>
                                     <br/>
-                                    {this.state.player.pokeName}
+                                    <h3>{this.state.player.pokeName}</h3>
                                 </div>
                             </div>
                             <div>
                                 {this.state.player.moves.map(move => (
                                     <button key={'move' + move.id}
-                                            onClick={() => this.toggleMove(move)}>{move.name}</button>
+                                            onClick={() => this.toggleMove(move)}
+                                            className="attack-button">{move.name}</button>
                                 ))}
                             </div>
                             <div>
                                 <progress id="comHealth" value="100" max="100"></progress>
-                                <h3>{'Players health: ' + this.state.player.health}</h3>
                                 <h3>{'Computer health: ' + this.state.computer.health}</h3>
                             </div>
                         </div>
