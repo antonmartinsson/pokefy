@@ -25,6 +25,10 @@ if (storedAuthData) {
   const data = JSON.parse(storedAuthData);
   spotifyApi.setAccessToken(data.body.access_token);
   spotifyApi.setRefreshToken(data.body.refresh_token);
+  spotifyApi.refreshAccessToken().then(data => {
+    console.log('Refreshed tokens');
+    spotifyApi.setAccessToken(data.body.access_token);
+  });
 }
 
 app.use(bodyParser.json());
@@ -58,9 +62,17 @@ app.post('/spotify/code', async (req, res) => {
   }
 });
 
-app.get('/spotify/recent-tracks', async (req, res) => {
+app.get('/spotify/recent-tracks', async (_, res) => {
   console.log('GET /spotify/recent-tracks');
   const data = await spotifyApi.getMyRecentlyPlayedTracks({ limit: 50 });
+  res.status(200).send(data);
+});
+
+app.get('/spotify/get-genre/:artistId', async (req, res) => {
+  console.log('GET /spotify/get-genre/' + req.params.artistId);
+  const { artistId } = req.params;
+  const data = await spotifyApi.getArtist(artistId);
+  console.log(data);
   res.status(200).send(data);
 });
 

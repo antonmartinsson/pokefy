@@ -1,21 +1,20 @@
 import React, { Component } from 'react';
 import * as api from './api';
 import './App.css';
-import Grid from "./modules/grid";
+import Grid from './modules/grid';
 import bulba from './bulba.png';
 
 class App extends Component {
-
   constructor(props) {
-      super(props);
-      this.state = {
-        gameState: 'login',
-          recentTracks: []
-      }
+    super(props);
+    this.state = {
+      gameState: 'login',
+      recentTracks: [],
+    };
 
-      this.moveToGame = this.moveToGame.bind(this);
+    this.moveToGame = this.moveToGame.bind(this);
   }
-  
+
   async componentDidMount() {
     await this.authorize();
   }
@@ -38,48 +37,51 @@ class App extends Component {
     const data = await fetch('/spotify/recent-tracks');
     const json = await data.json();
     console.log(json.body.items.map(item => item.track.name));
-    this.setState({recentTracks: json.body.items});
+    this.setState({ recentTracks: json.body.items });
   };
 
-    moveToGrid = () => {
-        this.setState({
-            gameState: 'grid'
-        });
-        this.getRecent();
-    };
+  getAlbum = async () => {
+    const genres = await api.getArtistGenres('52zMTJCKluDlFwMQWmccY7');
+    console.log(genres);
+  };
 
-    moveToGame = () => {
-        this.setState({
-            gameState: 'game'
-        });
-    };
+  moveToGrid = () => {
+    this.setState({
+      gameState: 'grid',
+    });
+    this.getRecent();
+  };
 
-    render() {
+  moveToGame = () => {
+    this.setState({
+      gameState: 'game',
+    });
+  };
+
+  render() {
     if (this.state.gameState === 'login')
-        return (
-            <div className="App">
-                <header className="App-header">
-                  <button onClick={this.moveToGrid}>Click me!</button>
-                </header>
-            </div>
-        );
+      return (
+        <div className='App'>
+          <header className='App-header'>
+            <button onClick={this.moveToGrid}>Click me!</button>
+          </header>
+        </div>
+      );
     else if (this.state.gameState === 'grid')
-        return (
-            <div className="App">
-                <header className="App-header">
-                  <Grid action={this.moveToGame} tracks={this.state.recentTracks}/>
-                </header>
-          </div>
-        );
+      return (
+        <div className='App'>
+          <Grid action={this.moveToGame} tracks={this.state.recentTracks} />
+        </div>
+      );
     else if (this.state.gameState === 'game')
-        return (
-            <div className="App">
-                <header className="App-header">
-                    <img src={bulba}/>
-                </header>
-            </div>
-        );
-    }
+      return (
+        <div className='App'>
+          <header className='App-header'>
+            <img src={bulba} />
+          </header>
+        </div>
+      );
+  }
 }
 
 export default App;
