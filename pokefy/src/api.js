@@ -43,6 +43,10 @@ export async function getMoveInformation(moveName) {
   return await moveRes.json();
 }
 
+export async function playSong(songId) {
+  await fetch('/spotify/play/' + songId);
+}
+
 async function getPokemonFromGenre(genre) {
   var match = {
     acoustic: 'normal',
