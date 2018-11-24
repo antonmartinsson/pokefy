@@ -21,7 +21,8 @@ class Grid extends Component{
 
         return (
             <div>
-                <h3>Pick a Song!</h3>
+                <div className="title">Pick a song</div>
+                <div className="subtitle">Let your music taste decide your next Pokémon champion!</div>
                 <br/>
                 <div className="song-grid">
                 {
