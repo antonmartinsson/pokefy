@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import '../App.css';
 
+const NO_MOVES = 4;
 
 const initialState = {
     move: 0,
@@ -51,40 +52,40 @@ class PokeGame extends Component {
         // Pokemon damage stat
         damage *= attackPlayer.pokemon.stats[5].base_stat;
         // Pokemon attack stat
-        damage *= attackMove.power;
-        damage /= 100;
-        damage += 2;
+        damage = damage * attackMove.power / 75 + 2;
 
         var modifier = Math.random() * (0.85 - 1.00) + 0.85;
         damage = (damage * modifier);
-
-        var defensiveHealth = defensePlayer.health - damage;
-
-        if (defensiveHealth < 0) {
-            this.setState({
-                winner: attackPlayer,
-            })
-        }
-
-        this.setState({
-            player: {
-                ...this.state.player,
-                health: attackPlayer.name === 'player' ? this.state.player.health : defensiveHealth
-            },
-            computer: {
-                ...this.state.computer,
-                health: attackPlayer.name === 'computer' ? this.state.computer.health : defensiveHealth
-            },
-        });
+        return defensePlayer.health - damage;
     }
 
     toggleMove(attackMove) {
         //Player's move
-        this.play(this.state.player, this.state.computer, attackMove);
+        var computerDefenseHealth = this.play(this.state.player, this.state.computer, attackMove);
+        if (computerDefenseHealth < 0) {
+            this.setState({winner: this.state.player});
+            return;
+        }
 
-        if (this.state.winner) return;
         // Computer's move
-        this.play(this.state.computer, this.state.player, attackMove);
+        attackMove = this.state.computer.moves[Math.floor(Math.random()*NO_MOVES)];
+        var playerDefenseHealth = this.play(this.state.computer, this.state.player, attackMove);
+        if (playerDefenseHealth < 0) {
+            this.setState({winner: this.state.computer});
+            return;
+        }
+
+        // Updating game's state
+        this.setState({
+            player: {
+                ...this.state.player,
+                health: playerDefenseHealth,
+            },
+            computer: {
+                ...this.state.computer,
+                health: computerDefenseHealth,
+            },
+        });
     }
 
     onChange = (event) => {
@@ -92,7 +93,7 @@ class PokeGame extends Component {
     };
 
 
-    getPokemon = async (event) => {
+    initializeGame = async (event) => {
         event.preventDefault();
         const typeRes = await getType(this.state.player.type);
         var pokeAmount = typeRes.pokemon.length;
@@ -102,14 +103,26 @@ class PokeGame extends Component {
         const pokemon = await getDetails(randPokemon);
         console.log(pokemon);
 
+        var sprite = pokemon.sprites.front_default;
+
+        // If the Pokémon doesn't have a sprite, just get another Pokémon.
+        while (sprite === null) {
+            const pokemon = await getDetails(randPokemon);
+            sprite = pokemon.sprites.front_default;
+        }
+
+        var pokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+
+        if (pokemonName.includes("-")) {
+            pokemonName = pokemonName.substring(0, pokemonName.indexOf('-'));
+        }
 
         // var moves = pokemon.moves.filter(move => move.power);
-        const n = 4;
         var moves = pokemon.moves
             .map(x => ({x, r: Math.random()}))
             .sort((a, b) => a.r - b.r)
             .map(a => a.x)
-            .slice(0, n);
+            .slice(0, NO_MOVES);
         moves = await Promise.all(moves.map(move => getMoveInformation(move.move.name)));
 
         console.log(moves);
@@ -120,6 +133,8 @@ class PokeGame extends Component {
                 move: 0,
                 player: {
                     name: "player",
+                    pokeName: pokemonName,
+                    sprite: sprite,
                     pokemon: pokemon,
                     moves: moves,
                     type: this.state.player.type,
@@ -129,13 +144,16 @@ class PokeGame extends Component {
 
                 computer: {
                     name: "computer",
+                    pokeName: pokemonName,
                     pokemon: pokemon,
+                    sprite: sprite,
                     moves: moves,
                     type: this.state.player.type,
                     level: 0,
                     health: 100,
                 },
                 isLoaded: true,
+                winner: null,
             }
         )
     };
@@ -147,13 +165,18 @@ class PokeGame extends Component {
     render() {
         return (
             <div>
-                <form onSubmit={this.getPokemon}>
+                <form onSubmit={this.initializeGame}>
                     <input onChange={this.onChange} value={this.state.player.type || ""} type="text" id="type"/>
                 </form>
                 {this.state.isLoaded && !this.state.winner && (
                     <div>
                         <div>
                             <h3>{'Player picked: ' + this.state.player.pokemon.name}</h3>
+                            <div>
+                                <img src={this.state.player.sprite} width='200px' height='200px' margin-bottom='-50px'/>
+                                <br/>
+                                {this.state.player.pokeName}
+                            </div>
                         </div>
                         <div>
                             {this.state.player.moves.map(move => (
@@ -163,7 +186,7 @@ class PokeGame extends Component {
                         </div>
                         <div>
                             <h3>{'Players health: ' + this.state.player.health}</h3>
-                            <h3>{'Computer health: ' + this.state.player.health}</h3>
+                            <h3>{'Computer health: ' + this.state.computer.health}</h3>
                         </div>
                     </div>
                 )}
