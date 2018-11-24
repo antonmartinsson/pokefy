@@ -10,6 +10,7 @@ class App extends Component {
     this.state = {
       gameState: 'login',
       recentTracks: [],
+      currentPokemon: null
     };
 
     this.moveToGame = this.moveToGame.bind(this);
@@ -86,7 +87,7 @@ class App extends Component {
       return (
         <div className='App'>
           <header className='App-header'>
-            <img src={bulba} />
+            <img src={this.state.currentPokemon.sprites.front_default} />
           </header>
         </div>
       );
