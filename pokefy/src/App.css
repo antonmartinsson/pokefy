@@ -46,6 +46,13 @@
 .Grid-img {
   display: inline-grid;
   max-width: 100%;
+  -webkit-filter: brightness(90%);
+  transition: all .2s ease-in-out;
+}
+
+.Grid-img:hover {
+  -webkit-filter: brightness(100%);
+  transform: scale(1.1);
 }
 
 .btn:disabled {
