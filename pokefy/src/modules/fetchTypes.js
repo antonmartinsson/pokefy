@@ -27,13 +27,27 @@ class TypeComponent extends React.Component {
 
   getPokemon = async (event) => {
     event.preventDefault()
-    const typeRes = await getType(this.state.type)
-    var pokeAmount = typeRes.pokemon.length
-    var randPokemonID = Math.round(Math.random() * (pokeAmount-1) + 0)
-    var randPokemon = typeRes.pokemon[randPokemonID].pokemon.name
+    try {
+        const typeRes = await getType(this.state.type)
+        var pokeAmount = typeRes.pokemon.length
+        var randPokemonID = Math.round(Math.random() * (pokeAmount-1) + 0)
+        var randPokemon = typeRes.pokemon[randPokemonID].pokemon.name
+        const pokemon = await getDetails(randPokemon);
+        console.log(pokemon);
+        
+        this.setState ({
+            isLoaded: true,
+            items: pokemon
+        })
+    }
+    catch(error) {
+        console.log(error);
+        this.setState ({
+            isLoaded: true,
+            error
+        })
+    }
 
-    const pokemon = await getDetails(randPokemon);
-    console.log(pokemon);
       
   }
 
