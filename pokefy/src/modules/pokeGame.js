@@ -47,6 +47,10 @@ class PokeGame extends Component {
         this.state = initialState
     }
 
+    componentDidMount() {
+        this.initializeGame()
+    }
+
     static play(attackPlayer, defensePlayer, attackMove) {
         var damage = ((2 * attackPlayer.level) / 5) + 2;
         // Pokemon damage stat
@@ -93,70 +97,60 @@ class PokeGame extends Component {
     };
 
 
-    initializeGame = async (event) => {
-        event.preventDefault();
-        const typeRes = await getType(this.state.player.type);
-        var pokeAmount = typeRes.pokemon.length;
-        var randPokemonID = Math.round(Math.random() * (pokeAmount - 1));
-        var randPokemon = typeRes.pokemon[randPokemonID].pokemon.name;
+     async initializeGame() {
+         const pokemon = this.props.pokemon;
+         console.log(pokemon);
 
-        const pokemon = await getDetails(randPokemon);
-        console.log(pokemon);
+         var sprite = pokemon.sprites.front_default;
 
-        var sprite = pokemon.sprites.front_default;
+         // If the Pokémon doesn't have a sprite, just get another Pokémon.
 
-        // If the Pokémon doesn't have a sprite, just get another Pokémon.
-        while (sprite === null) {
-            const pokemon = await getDetails(randPokemon);
-            sprite = pokemon.sprites.front_default;
-        }
+         var pokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
 
-        var pokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+         if (pokemonName.includes("-")) {
+             pokemonName = pokemonName.substring(0, pokemonName.indexOf('-'));
+         }
 
-        if (pokemonName.includes("-")) {
-            pokemonName = pokemonName.substring(0, pokemonName.indexOf('-'));
-        }
+         // var moves = pokemon.moves.filter(move => move.power);
+         var moves = pokemon.moves
+             .map(x => ({x, r: Math.random()}))
+             .sort((a, b) => a.r - b.r)
+             .map(a => a.x)
+             .slice(0, NO_MOVES);
+         moves = await Promise.all(moves.map(move => getMoveInformation(move.move.name)));
 
-        // var moves = pokemon.moves.filter(move => move.power);
-        var moves = pokemon.moves
-            .map(x => ({x, r: Math.random()}))
-            .sort((a, b) => a.r - b.r)
-            .map(a => a.x)
-            .slice(0, NO_MOVES);
-        moves = await Promise.all(moves.map(move => getMoveInformation(move.move.name)));
-
-        console.log(moves);
+         console.log(moves);
 
 
-        //TODO: Change for computer
-        this.setState({
-                move: 0,
-                player: {
-                    name: "player",
-                    pokeName: pokemonName,
-                    sprite: sprite,
-                    pokemon: pokemon,
-                    moves: moves,
-                    type: this.state.player.type,
-                    level: 0,
-                    health: 100,
-                },
+         //TODO: Change for computer
+         this.setState({
+                 move: 0,
+                 player: {
+                     name: "player",
+                     pokeName: pokemonName,
+                     sprite: sprite,
+                     pokemon: pokemon,
+                     moves: moves,
+                     type: this.state.player.type,
+                     level: 0,
+                     health: 100,
+                 },
 
-                computer: {
-                    name: "computer",
-                    pokeName: pokemonName,
-                    pokemon: pokemon,
-                    sprite: sprite,
-                    moves: moves,
-                    type: this.state.player.type,
-                    level: 0,
-                    health: 100,
-                },
-                isLoaded: true,
-                winner: null,
-            }
-        )
-    };
+                 computer: {
+                     name: "computer",
+                     pokeName: pokemonName,
+                     pokemon: pokemon,
+                     sprite: sprite,
+                     moves: moves,
+                     type: this.state.player.type,
+                     level: 0,
+                     health: 100,
+                 },
+                 isLoaded: true,
+                 winner: null,
+             }
+         )
+     };
 
     reset() {
         this.state = initialState
@@ -165,9 +159,6 @@ class PokeGame extends Component {
     render() {
         return (
             <div>
-                <form onSubmit={this.initializeGame}>
-                    <input onChange={this.onChange} value={this.state.player.type || ""} type="text" id="type"/>
-                </form>
                 {this.state.isLoaded && !this.state.winner && (
                     <div>
                         <div>
@@ -194,6 +185,7 @@ class PokeGame extends Component {
                 {this.state.isLoaded && this.state.winner && (
                     <div>
                         {'Winner is: ' + this.state.winner.name}
+                        <button onClick={this.props.action}>{"NEXT!"}</button>
                     </div>
                 )}
             </div>
