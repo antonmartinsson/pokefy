@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import * as api from '../api';
 import '../App.css';
 
+// limits number to max
+const clamp = (num, max) => Math.min(Math.max(num, 0), max);
+
 const NO_MOVES = 4;
 
 const initialState = {
@@ -37,21 +40,34 @@ class PokeGame extends Component {
         this.initializeGame()
     }
 
-    static play(attackPlayer, defensePlayer, attackMove) {
+    static play(attackPlayer, defensePlayer, attackMove, playerAttacking) {
         var damage = ((2 * attackPlayer.level) / 5) + 2;
         // Pokemon damage stat
-        damage *= attackPlayer.pokemon.stats[5].base_stat;
+        damage *= attackPlayer.pokemon.stats[4].base_stat;
         // Pokemon attack stat
         damage = damage * attackMove.power / 75 + 2;
 
         var modifier = Math.random() * (0.85 - 1.00) + 0.85;
-        damage = (damage * modifier);
+        
+        const baseHealth = defensePlayer.pokemon.stats[5].base_stat;
+        damage = clamp(damage * modifier, 0.3 * baseHealth);
+        
+        if (playerAttacking == true) {
+            let comHealth = document.getElementById("comHealth")
+            comHealth.value -= damage; //Or whatever you want to do with it.
+        }
+        else {
+            let playerHealth = document.getElementById("playerHealth")
+            playerHealth.value -= damage; //Or whatever you want to do with it.
+        }
+        
         return defensePlayer.health - damage;
     }
 
     toggleMove(attackMove) {
         //Player's move
-        var computerDefenseHealth = PokeGame.play(this.state.player, this.state.computer, attackMove);
+        console.log(this.state.player);
+        var computerDefenseHealth = PokeGame.play(this.state.player, this.state.computer, attackMove, true);
         if (computerDefenseHealth < 0) {
             this.setState({winner: this.state.player});
             return;
@@ -59,7 +75,7 @@ class PokeGame extends Component {
 
         // Computer's move
         attackMove = this.state.computer.moves[Math.floor(Math.random()*NO_MOVES)];
-        var playerDefenseHealth = PokeGame.play(this.state.computer, this.state.player, attackMove);
+        var playerDefenseHealth = PokeGame.play(this.state.computer, this.state.player, attackMove, false);
         if (playerDefenseHealth < 0) {
             this.setState({winner: this.state.computer});
             return;
@@ -163,6 +179,7 @@ class PokeGame extends Component {
                                 ))}
                             </div>
                             <div>
+                                <progress id="playerHealth" value="100" max="100"></progress>
                                 <h3>{'Players health: ' + this.state.player.health}</h3>
                                 <h3>{'Computer health: ' + this.state.computer.health}</h3>
                             </div>
@@ -183,6 +200,7 @@ class PokeGame extends Component {
                                 ))}
                             </div>
                             <div>
+                                <progress id="comHealth" value="100" max="100"></progress>
                                 <h3>{'Players health: ' + this.state.player.health}</h3>
                                 <h3>{'Computer health: ' + this.state.computer.health}</h3>
                             </div>
