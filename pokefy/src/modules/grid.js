@@ -21,7 +21,7 @@ class Grid extends Component{
 
         return (
             <div>
-                <h3>{this.state.title}</h3>
+                <h3>Pick a Song!</h3>
                 <br/>
                 <div className="song-grid">
                 {
