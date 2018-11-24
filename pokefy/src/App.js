@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as api from './api';
 import './App.css';
 import Grid from "./modules/grid";
 import bulba from './bulba.png';
@@ -12,8 +13,31 @@ class App extends Component {
       }
 
       this.moveToGame = this.moveToGame.bind(this);
-
   }
+  
+  async componentDidMount() {
+    await this.authorize();
+  }
+
+  async authorize() {
+    const url = new URLSearchParams(window.location.search);
+    const authCallBackCode = url.get('code');
+    const verificationState = url.get('state');
+
+    if (authCallBackCode && verificationState) {
+      await api.authorize(authCallBackCode);
+      window.history.pushState(null, null, '/');
+      return;
+    }
+
+    await api.login();
+  }
+
+  getRecent = async () => {
+    const data = await fetch('/spotify/recent-tracks');
+    const json = await data.json();
+    console.log(json.body.items.map(item => item.track.name));
+  };
 
     moveToGrid = () => {
         this.setState({
