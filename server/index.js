@@ -25,6 +25,10 @@ if (storedAuthData) {
   const data = JSON.parse(storedAuthData);
   spotifyApi.setAccessToken(data.body.access_token);
   spotifyApi.setRefreshToken(data.body.refresh_token);
+  spotifyApi.refreshAccessToken().then(data => {
+    console.log('Refreshed tokens');
+    spotifyApi.setAccessToken(data.body.access_token);
+  });
 }
 
 app.use(bodyParser.json());
