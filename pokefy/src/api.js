@@ -109,6 +109,11 @@ export function findBestMatch(genre) {
     return match[stringSimilarity.findBestMatch(genre, Object.keys(match)).bestMatch.target];
 }
 
+export function findGenresMatch(genres) {
+    let genresString = genres.join(" ");
+    return match[stringSimilarity.findBestMatch(genresString, Object.keys(match)).bestMatch.target];
+}
+
 function calculateSimilarity(pokeType, songType) {
     return stringSimilarity.compareTwoStrings(pokeType, songType);
 }
@@ -178,7 +183,7 @@ export async function playSong(songId) {
 }
 
 async function getPokemonFromGenre(genres) {
-    const topGenre = findBestMatch(genres[0] || " ");
+    const topGenre = findGenresMatch(genres);
     const songTypes = genres.map(g => findBestMatch(g)).join(" ");
     const pokemonJSON = await getPokemonType(topGenre || 'normal');
     try {

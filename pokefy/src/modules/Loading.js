@@ -45,7 +45,7 @@ class Loading extends React.Component {
     }, 1000);
 
     console.log('Get best type');
-    const type = api.findBestMatch(genres[0] || '');
+    const type = api.findGenresMatch(genres);
     setTimeout(() => {
       this.setState({
         type,

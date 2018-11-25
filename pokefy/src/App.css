@@ -149,8 +149,30 @@ progress[value]::-webkit-progress-bar {
   border-radius: 50px;
 }
 
-progress[value]::-webkit-progress-value {
+.success {
+    margin-bottom: 30px;
+}
+
+.warning {
+    margin-bottom: 30px;
+}
+
+.low {
+    margin-bottom: 30px;
+}
+
+.success[value]::-webkit-progress-value {
   background-color: #11fd00;
+  border-radius: 50px;
+}
+
+.warning[value]::-webkit-progress-value {
+  background-color: #EAD203;
+  border-radius: 50px;
+}
+
+.low[value]::-webkit-progress-value {
+  background-color: #F80004;
   border-radius: 50px;
 }
 

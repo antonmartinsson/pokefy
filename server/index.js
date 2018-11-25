@@ -29,6 +29,12 @@ if (storedAuthData) {
     console.log('Refreshed tokens');
     spotifyApi.setAccessToken(data.body.access_token);
   });
+  setInterval(() => {
+    spotifyApi.refreshAccessToken().then(data => {
+      console.log('Refreshed tokens automatically');
+      spotifyApi.setAccessToken(data.body.access_token);
+    });
+  }, 3600 * 60);
 }
 
 app.use(bodyParser.json());
@@ -84,17 +90,19 @@ app.get('/spotify/play/:songId', async (req, res) => {
 });
 
 app.get('/spotify/random-song', async (req, res) => {
-    console.log('GET /spotify/random-song');
-    let alphabet = 'abcdefghijklmnopqrstuvwxyz';
-    let query = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-    console.log('query : ' + query);
-    spotifyApi.searchTracks(query, {limit: 1})
-        .then(function (data) {
-            console.log(data.body.tracks.items[0]);
-            res.status(200).send(data.body.tracks.items[0]);
-        }, function (err) {
-            console.error(err);
-        });
+  console.log('GET /spotify/random-song');
+  let alphabet = 'abcdefghijklmnopqrstuvwxyz';
+  let query = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+  console.log('query : ' + query);
+  spotifyApi.searchTracks(query, { limit: 1 }).then(
+    function(data) {
+      console.log(data.body.tracks.items[0]);
+      res.status(200).send(data.body.tracks.items[0]);
+    },
+    function(err) {
+      console.error(err);
+    }
+  );
 });
 
 app.listen(PORT, () => {
