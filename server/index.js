@@ -89,6 +89,19 @@ app.get('/spotify/play/:songId', async (req, res) => {
   spotifyApi.play({ uris: ['spotify:track:' + songId] });
 });
 
+app.get('/spotify/get-track-features/:songId', async (req, res) => {
+    console.log('GET /spotify/get-track-features/' + req.params.songId);
+    const { songId } = req.params;
+    try {
+        const data = await spotifyApi.getAudioFeaturesForTrack(songId);
+        console.log(data);
+        res.status(200).send(data);
+    } catch(error) {
+        console.error('Error when fetching features', error);
+    }
+
+});
+
 app.get('/spotify/random-song', async (req, res) => {
   console.log('GET /spotify/random-song');
   let alphabet = 'abcdefghijklmnopqrstuvwxyz';
