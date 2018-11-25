@@ -279,10 +279,6 @@ class PokeGame extends Component {
     this.state = initialState;
   }
 
-  toggleDancePokemon = () => {
-
-  }
-
   render() {
     return (
       <div>
