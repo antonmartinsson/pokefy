@@ -20,6 +20,7 @@ class App extends Component {
   }
 
   async componentDidMount() {
+    document.title = "Pokéfy";
     await this.authorize();
   }
 
