@@ -120,13 +120,20 @@ class PokeGame extends Component {
     return pokemon.sprites.front_default;
   }
 
-  static getPokeName(pokemon) {
+  static getPokeName(pokemon, track) {
       let pokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
 
       if (pokemonName.includes('-')) {
           pokemonName = pokemonName.substring(0, pokemonName.indexOf('-'));
       }
-      return pokemonName
+      let artist = track.track.artists[0].name + '\'s';
+      return artist + " " + pokemonName
+  }
+
+  static cleanUpperCase(moveName) {
+      let splited = moveName.split('-');
+      splited = splited.map(s => s.toUpperCase());
+      return splited.join(" ")
   }
 
   static async getPokeMoves(pokemon) {
@@ -137,20 +144,20 @@ class PokeGame extends Component {
           .map(a => a.x)
           .slice(0, NO_MOVES);
       moves =  await Promise.all(moves.map(move => api.getMoveInformation(move.move.name)));
+      moves.forEach(move => move.name = PokeGame.cleanUpperCase(move.name));
       return moves
   }
 
   async initializeGame() {
     console.log("INITIALIZATION");
-
     const playerPokemon = this.props.pokemon;
     const opponentPokemon = this.props.opponent;
 
     let playerSprite = PokeGame.getPokeSprite(playerPokemon);
     let opponentSprite = PokeGame.getPokeSprite(opponentPokemon);
 
-    let playerPokeName = PokeGame.getPokeName(playerPokemon);
-    let opponentPokeName = PokeGame.getPokeName(opponentPokemon);
+    let playerPokeName = PokeGame.getPokeName(playerPokemon, this.props.playerTrack);
+    let opponentPokeName = PokeGame.getPokeName(opponentPokemon, this.props.opponentTrack);
 
     let playerMoves = await PokeGame.getPokeMoves(playerPokemon);
     let opponentMoves = await PokeGame.getPokeMoves(opponentPokemon);
