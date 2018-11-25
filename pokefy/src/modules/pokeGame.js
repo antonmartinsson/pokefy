@@ -75,7 +75,7 @@ const initialState = {
   isLoaded: false,
   winner: null,
     buttonsDisabled: false,
-    enemyAttack: ''
+    enemyAttack: 'OPPONENT WARMING UP'
 };
 
 class PokeGame extends Component {
@@ -120,6 +120,8 @@ class PokeGame extends Component {
       attackMove,
       true
     );
+
+
     if (computerDefenseHealth < 0) {
       this.setState({ winner: this.state.player });
       return;
@@ -132,6 +134,9 @@ class PokeGame extends Component {
       },
         buttonsDisabled: true,
     });
+
+      playerAnimation();
+      await sleep(1000);
 
     // Computer's move
     attackMove = this.state.computer.moves[Math.floor(Math.random() * NO_MOVES)];
@@ -262,8 +267,11 @@ class PokeGame extends Component {
                 <div>
                   <img src={this.state.player.sprite} className='player-img' id="playerSprite"/>
                   <br />
-                  <h3>{this.state.player.pokeName}</h3>
+                  <h3 className="player-name">{this.state.player.pokeName}</h3>
                 </div>
+              <div>
+                  <progress id='playerHealth' value='100' max='100' className="progress-bar" />
+              </div>
               </div>
               <div>
                 {this.state.player.moves.map(move => (
@@ -277,10 +285,6 @@ class PokeGame extends Component {
                   </button>
                 ))}
               </div>
-              <div>
-                <progress id='playerHealth' value='100' max='100' />
-                <h3>{'Players health: ' + this.state.player.health}</h3>
-              </div>
             </div>
             <div>
               <div>
@@ -288,13 +292,12 @@ class PokeGame extends Component {
                 <div>
                   <img src={this.state.computer.sprite} className='enemy-img' id="comSprite"/>
                   <br />
-                  <h3>{this.state.computer.pokeName}</h3>
+                  <h3 className="player-name">{this.state.computer.pokeName}</h3>
+                    <div>
+                        <progress id='comHealth' value='100' max='100' className="progress-bar"/>
+                    </div>
                     <h6>{this.state.enemyAttack}</h6>
                 </div>
-              </div>
-              <div>
-                <progress id='comHealth' value='100' max='100' />
-                <h3>{'Computer health: ' + this.state.computer.health}</h3>
               </div>
             </div>
           </div>
@@ -304,6 +307,7 @@ class PokeGame extends Component {
           <div>
             {'Winner is: ' + this.state.winner.name}
             <br />
+              <br/>
             <button className='attack-button' onClick={this.props.action}>
               {'NEXT!'}
             </button>
