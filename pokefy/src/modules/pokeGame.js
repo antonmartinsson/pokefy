@@ -62,6 +62,8 @@ const initialState = {
     name: 'player',
     pokemon: null,
     moves: [],
+    tempo: null,
+    track: null,
     type: null,
     level: 0,
     health: 0,
@@ -71,6 +73,8 @@ const initialState = {
     name: 'computer',
     pokemon: null,
     moves: [],
+    tempo: null,
+    track: null,
     type: null,
     level: 0,
     health: 0,
@@ -108,7 +112,7 @@ class PokeGame extends Component {
     else {
       damage = clamp(damage * modifier, 0.3 * baseHealth);
     }
-    
+
     if (playerAttacking == true) {
       let comHealth = document.getElementById('comHealth');
       comHealth.value -= damage; //Or whatever you want to do with it.
@@ -142,67 +146,94 @@ class PokeGame extends Component {
   }
 
   async toggleMove(attackMove) {
-    //Player's move
-    console.log(this.state.player);
-    var computerDefenseHealth = PokeGame.play(
-      this.state.player,
-      this.state.computer,
-      attackMove,
-      true
-    );
 
+    const playerTempo = this.state.player.tempo;
+    const computerTempo = this.state.computer.tempo;
+    console.log(playerTempo);
+    console.log(computerTempo);
 
-    if (computerDefenseHealth < 0) {
-      this.setState({ winner: this.state.player });
-      return;
-    }
-
-    this.setState({
-      computer: {
-        ...this.state.computer,
-        health: computerDefenseHealth,
-      },
-        buttonsDisabled: true,
-    });
-
-      playerAnimation();
-      await sleep(1000);
-
-    // Computer's move
-    attackMove = this.state.computer.moves[Math.floor(Math.random() * NO_MOVES)];
-      if (attackMove.name) {
+    const playerMove = (disableButton) => {
+        //Player's move
+          var computerDefenseHealth = PokeGame.play(
+              this.state.player,
+              this.state.computer,
+              attackMove,
+              true
+          );
+          if (computerDefenseHealth < 0) {
+              this.setState({ winner: this.state.player });
+              return computerDefenseHealth;
+          }
           this.setState({
-              enemyAttack: 'OPPONENT USED ' + attackMove.name + '!'
-          })
-      } else if (!attackMove.name) {
-          this.setState({
-              enemyAttack: 'OPPONENT USED A SECRET ATTACK!'
-          })
+              computer: {
+                  ...this.state.computer,
+                  health: computerDefenseHealth,
+              },
+              buttonsDisabled: disableButton,
+          });
+          playerAnimation();
+      return computerDefenseHealth;
       }
-    var playerDefenseHealth = PokeGame.play(
-      this.state.computer,
-      this.state.player,
-      attackMove,
-      false
-    );
 
-    comAnimation();
-    await sleep(1000);
+    const computerMove = () => {
+        // Computer's move
+        attackMove = this.state.computer.moves[Math.floor(Math.random() * NO_MOVES)];
+        console.log(attackMove.name);
 
-    if (playerDefenseHealth < 0) {
-      this.setState({ winner: this.state.computer });
-      return;
+        if (attackMove.name) {
+            this.setState({
+                enemyAttack: 'OPPONENT USED ' + attackMove.name + '!'
+            })
+        } else if (!attackMove.name) {
+            this.setState({
+                enemyAttack: 'OPPONENT USED A SECRET ATTACK!'
+            })
+        }
+        var playerDefenseHealth = PokeGame.play(
+            this.state.computer,
+            this.state.player,
+            attackMove,
+            false
+        );
+
+        comAnimation();
+        //await sleep(1000);
+
+        if (playerDefenseHealth < 0) {
+            this.setState({ winner: this.state.computer });
+            return playerDefenseHealth;
+        }
+
+        // Updating game's state
+        this.setState({
+            player: {
+                ...this.state.player,
+                health: playerDefenseHealth,
+            },
+            buttonsDisabled: false,
+            activeEnemyButton: false
+        });
+        return playerDefenseHealth;
     }
 
-    // Updating game's state
-    this.setState({
-      player: {
-        ...this.state.player,
-        health: playerDefenseHealth,
-      },
-        buttonsDisabled: false,
-        activeEnemyButton: false
-    });
+      if (playerTempo > computerTempo) {
+          var health = playerMove(true)
+          console.log(health);
+          await sleep(1000);
+          if (health >=0){
+              computerMove()
+          }
+
+      }
+      else {
+          var health = computerMove()
+          console.log(health);
+          await sleep(1000);
+          if (health >=0){
+              playerMove(false)
+          }
+      }
+
   }
 
   static getPokeSprite(pokemon) {
@@ -242,6 +273,17 @@ class PokeGame extends Component {
     const playerPokemon = this.props.pokemon;
     const opponentPokemon = this.props.opponent;
 
+    const playerTrack = this.props.playerTrack;
+    const opponentTrack = this.props.opponentTrack;
+
+    const playerTrackDetails = await api.getTrackFeatures(playerTrack.track.id);
+    const opponentTrackDetails = await api.getTrackFeatures(opponentTrack.track.id);
+
+    const playerAttackSpeed = playerTrackDetails.body.tempo * playerPokemon.stats[0].base_stat;
+    const opponentAttackSpeed = opponentTrackDetails.body.tempo * opponentPokemon.stats[0].base_stat;
+    console.log(playerAttackSpeed);
+    console.log(opponentAttackSpeed);
+
     let playerSprite = PokeGame.getPokeSprite(playerPokemon);
     let opponentSprite = PokeGame.getPokeSprite(opponentPokemon);
 
@@ -260,6 +302,7 @@ class PokeGame extends Component {
         sprite: playerSprite,
         pokemon: playerPokemon,
         moves: playerMoves,
+        tempo: playerAttackSpeed,
         type: this.state.player.type,
         level: 0,
         health: 100,
@@ -271,6 +314,7 @@ class PokeGame extends Component {
         pokemon: opponentPokemon,
         sprite: opponentSprite,
         moves: opponentMoves,
+        tempo: opponentAttackSpeed,
         type: this.state.player.type,
         level: 0,
         health: 100,
@@ -298,7 +342,7 @@ class PokeGame extends Component {
                   <h3 className="player-name">{this.state.player.pokeName}</h3>
                 </div>
               <div>
-                <progress id='playerHealth' class="success" value='100' max='100' />
+                <progress id='playerHealth' className="success" value='100' max='100' />
               </div>
               </div>
               <div>
@@ -322,7 +366,7 @@ class PokeGame extends Component {
                   <br />
                   <h3 className="player-name">{this.state.computer.pokeName}</h3>
                     <div>
-                      <progress id='comHealth' class="success" value='100' max='100' />
+                      <progress id='comHealth' className="success" value='100' max='100' />
                     </div>
                     <h6>{this.state.enemyAttack}</h6>
                 </div>

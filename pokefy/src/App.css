@@ -279,3 +279,7 @@ progress[value]::-webkit-progress-bar {
   border-color: white;
 }
 
+.pokeball:hover {
+  cursor: pointer;
+}
+
