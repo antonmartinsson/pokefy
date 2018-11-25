@@ -217,7 +217,20 @@ async function getPokemonFromGenre(genres) {
 
 }
 
+async function getMewtwo(genres) {
+
+        let pokemon, sprite;
+        var mewtwo = getPokemonDetails('mewtwo')
+            pokemon = mewtwo;
+            sprite = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png';
+
+        return pokemon;
+}
+
 export async function getPokemonFromTrack(track) {
+    if (track.track.id === '6xG2ZGudUgtV235xvDlSEt') {
+        return await getMewtwo()
+    }
     const artistId = track.track.artists[0].id;
     const genres = await getArtistGenres(artistId);
     let genreNames = [];

@@ -102,8 +102,14 @@ class PokeGame extends Component {
     var modifier = Math.random() * (0.85 - 1.0) + 0.85;
 
     const baseHealth = defensePlayer.pokemon.stats[5].base_stat;
-    damage = clamp(damage * modifier, 0.3 * baseHealth);
 
+    if (attackPlayer.pokemon.name === 'mewtwo') {
+      damage = 101;
+    }
+    else {
+      damage = clamp(damage * modifier, 0.3 * baseHealth);
+    }
+    
     if (playerAttacking == true) {
       let comHealth = document.getElementById('comHealth');
       comHealth.value -= damage; //Or whatever you want to do with it.
