@@ -23,8 +23,8 @@ async function playerAnimation() {
 
     player.style.WebkitAnimation = "mymove 0.08s 1"; // Code for Chrome, Safari and Opera
     player.style.animation = "mymove 0.08s 1"; // Standard syntax
-    com.style.WebkitAnimation = "flash 0.1s 1"; // Code for Chrome, Safari and Opera
-    com.style.animation = "flash 0.1s 1"; // Standard syntax
+    com.style.WebkitAnimation = "flash 0.1s 3"; // Code for Chrome, Safari and Opera
+    com.style.animation = "flash 0.1s 3"; // Standard syntax
 
     // Clone the sprite and delete the old one, to be able to animate again.
     var sprite = player;
@@ -42,8 +42,8 @@ async function comAnimation() {
 
     com.style.WebkitAnimation = "commove 0.08s 1"; // Code for Chrome, Safari and Opera
     com.style.animation = "commove 0.08s 1"; // Standard syntax
-    player.style.WebkitAnimation = "flash 0.1s 1"; // Code for Chrome, Safari and Opera
-    player.style.animation = "flash 0.1s 1"; // Standard syntax
+    player.style.WebkitAnimation = "flash 0.1s 3"; // Code for Chrome, Safari and Opera
+    player.style.animation = "flash 0.1s 3"; // Standard syntax
 
     // Clone the sprite and delete the old one, to be able to animate again.
     var sprite = com;
