@@ -14,7 +14,19 @@ class Grid extends Component {
 
   getTracks() {
     const { tracks, playedTrackIds } = this.props;
-    return tracks.filter(track => !playedTrackIds[track.track.id]).slice(0, 10);
+
+    // filter out duplicates
+    const seenTracks = {};
+    const uniqueTracks = tracks.filter(track => {
+      const { id } = track.track;
+
+      const hasSeenTrack = seenTracks[id] === true;
+      seenTracks[id] = true;
+
+      return !hasSeenTrack;
+    });
+    // filter out previously played tracks;
+    return uniqueTracks.filter(track => !playedTrackIds[track.track.id]).slice(0, 10);
   }
 
   render() {
