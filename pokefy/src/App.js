@@ -3,6 +3,7 @@ import * as api from './api';
 import './App.css';
 import Grid from './modules/grid';
 import PokeGame from './modules/pokeGame';
+import Loading from './modules/Loading';
 
 class App extends Component {
   constructor(props) {
@@ -16,8 +17,6 @@ class App extends Component {
       opponentTrack: null,
       playedTrackIds: {},
     };
-
-    this.moveToGame = this.moveToGame.bind(this);
   }
 
   async componentDidMount() {
@@ -52,18 +51,21 @@ class App extends Component {
     this.getRecent();
   };
 
-  moveToGame = async selectedTrack => {
-    const pokemon = await api.getPokemonFromTrack(selectedTrack);
-    let randomTrack = { track: await api.getRandomSong() };
-    let opponentPokemon = await api.getPokemonFromTrack(randomTrack);
+  moveToLoading = async selectedTrack => {
     this.setState(state => ({
-      gameState: 'game',
-      currentPokemon: pokemon,
-      opponentPokemon: opponentPokemon,
+      gameState: 'loading',
       currentTrack: selectedTrack,
-      opponentTrack: randomTrack,
       playedTrackIds: { ...state.playedTrackIds, [selectedTrack.track.id]: true },
     }));
+  };
+
+  moveToGame = (currentPokemon, opponentTrack, opponentPokemon) => {
+    this.setState({
+      gameState: 'game',
+      currentPokemon,
+      opponentTrack,
+      opponentPokemon,
+    });
   };
 
   render() {
@@ -92,10 +94,18 @@ class App extends Component {
       return (
         <div className='App'>
           <Grid
-            action={this.moveToGame}
+            action={this.moveToLoading}
             playedTrackIds={this.state.playedTrackIds}
             tracks={this.state.recentTracks}
           />
+        </div>
+      );
+    }
+
+    if (gameState === 'loading') {
+      return (
+        <div className='App'>
+          <Loading currentTrack={this.state.currentTrack} moveToGame={this.moveToGame} />
         </div>
       );
     }

@@ -105,7 +105,7 @@ const match = {
     'world-music': 'normal',
 };
 
-function findBestMatch(genre) {
+export function findBestMatch(genre) {
     return match[stringSimilarity.findBestMatch(genre, Object.keys(match)).bestMatch.target];
 }
 
