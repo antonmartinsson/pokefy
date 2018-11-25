@@ -103,9 +103,30 @@ class PokeGame extends Component {
     if (playerAttacking == true) {
       let comHealth = document.getElementById('comHealth');
       comHealth.value -= damage; //Or whatever you want to do with it.
+
+      if (comHealth.value <= 100) {
+        comHealth.className = "success"
+          if (comHealth.value <= 50) {
+            comHealth.className = "warning"
+              if (comHealth.value <= 20) {
+                comHealth.className = "low"
+          }
+        }
+      }
+
     } else {
       let playerHealth = document.getElementById('playerHealth');
       playerHealth.value -= damage; //Or whatever you want to do with it.
+
+      if (playerHealth.value <= 100) {
+        playerHealth.className = "success"
+          if (playerHealth.value <= 50) {
+              playerHealth.className = "warning"
+              if (playerHealth.value <= 20) {
+                  playerHealth.className = "low"
+          }
+        }
+      }
     }
 
     return defensePlayer.health - damage;
@@ -270,7 +291,7 @@ class PokeGame extends Component {
                   <h3 className="player-name">{this.state.player.pokeName}</h3>
                 </div>
               <div>
-                  <progress id='playerHealth' value='100' max='100' className="progress-bar" />
+                <progress id='playerHealth' class="success" value='100' max='100' />
               </div>
               </div>
               <div>
@@ -294,7 +315,7 @@ class PokeGame extends Component {
                   <br />
                   <h3 className="player-name">{this.state.computer.pokeName}</h3>
                     <div>
-                        <progress id='comHealth' value='100' max='100' className="progress-bar"/>
+                      <progress id='comHealth' class="success" value='100' max='100' />
                     </div>
                     <h6>{this.state.enemyAttack}</h6>
                 </div>
