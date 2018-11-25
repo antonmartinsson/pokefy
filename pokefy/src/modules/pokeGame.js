@@ -36,6 +36,8 @@ const initialState = {
   },
   isLoaded: false,
   winner: null,
+    buttonsDisabled: false,
+    enemyAttack: ''
 };
 
 class PokeGame extends Component {
@@ -80,6 +82,7 @@ class PokeGame extends Component {
       attackMove,
       true
     );
+
     if (computerDefenseHealth < 0) {
       this.setState({ winner: this.state.player });
       return;
@@ -90,12 +93,25 @@ class PokeGame extends Component {
         ...this.state.computer,
         health: computerDefenseHealth,
       },
+        buttonsDisabled: true,
     });
 
     await sleep(1000);
 
     // Computer's move
     attackMove = this.state.computer.moves[Math.floor(Math.random() * NO_MOVES)];
+    console.log(attackMove.name);
+
+    if (attackMove.name) {
+        this.setState({
+            enemyAttack: 'OPPONENT USED ' + attackMove.name + '!'
+        })
+    } else if (!attackMove.name) {
+        this.setState({
+            enemyAttack: 'OPPONENT USED A SECRET ATTACK!'
+        })
+    }
+
     var playerDefenseHealth = PokeGame.play(
       this.state.computer,
       this.state.player,
@@ -113,6 +129,8 @@ class PokeGame extends Component {
         ...this.state.player,
         health: playerDefenseHealth,
       },
+        buttonsDisabled: false,
+        activeEnemyButton: false
     });
   }
 
@@ -202,7 +220,7 @@ class PokeGame extends Component {
           <div className='player-container'>
             <div>
               <div>
-                <h3>{'Player picked: ' + this.state.player.pokemon.name}</h3>
+                <h3>Your champion!</h3>
                 <div>
                   <img src={this.state.player.sprite} className='player-img' />
                   <br />
@@ -212,9 +230,10 @@ class PokeGame extends Component {
               <div>
                 {this.state.player.moves.map(move => (
                   <button
+                      disabled={this.state.buttonsDisabled}
                     key={'move' + move.id}
                     onClick={() => this.toggleMove(move)}
-                    className='attack-button'
+                    className={this.state.buttonsDisabled ? 'disab-attack-button':'attack-button'}
                   >
                     {move.name}
                   </button>
@@ -227,23 +246,13 @@ class PokeGame extends Component {
             </div>
             <div>
               <div>
-                <h3>{'Enemy picked: ' + this.state.computer.pokemon.name}</h3>
+                <h3>Your opponent!</h3>
                 <div>
                   <img src={this.state.computer.sprite} className='enemy-img' />
                   <br />
                   <h3>{this.state.computer.pokeName}</h3>
+                    <h6>{this.state.enemyAttack}</h6>
                 </div>
-              </div>
-              <div>
-                {this.state.computer.moves.map(move => (
-                  <button
-                    key={'move' + move.id}
-                    onClick={() => this.toggleMove(move)}
-                    className='attack-button'
-                  >
-                    {move.name}
-                  </button>
-                ))}
               </div>
               <div>
                 <progress id='comHealth' value='100' max='100' />
