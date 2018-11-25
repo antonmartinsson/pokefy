@@ -178,7 +178,7 @@ export async function playSong(songId) {
 }
 
 async function getPokemonFromGenre(genres) {
-    const topGenre = findBestMatch(genres[0]);
+    const topGenre = findBestMatch(genres[0] || " ");
     const songTypes = genres.map(g => findBestMatch(g)).join(" ");
     const pokemonJSON = await getPokemonType(topGenre || 'normal');
     try {
