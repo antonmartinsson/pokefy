@@ -35,6 +35,14 @@
   right: 0;
 }
 
+.pokeball:hover {
+    border: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0.8;
+}
+
 .App-link {
   color: #61dafb;
 }
@@ -281,5 +289,32 @@ progress[value]::-webkit-progress-bar {
 
 .pokeball:hover {
   cursor: pointer;
+
+}
+
+.quit-button {
+    cursor: pointer;
+    border: solid;
+    margin-top: 100px;
+    min-height: 30px;
+    width: 100px;
+    font-family: Raleway, serif;
+    font-weight: bold;
+    background: transparent;
+    color: white;
+    opacity: 0.4;
+
+}
+
+.quit-button:hover {
+    cursor: pointer;
+    border: solid;
+    margin-top: 100px;
+    min-height: 30px;
+    width: 100px;
+    font-family: Raleway, serif;
+    font-weight: bold;
+    opacity: 1;
+
 }
 

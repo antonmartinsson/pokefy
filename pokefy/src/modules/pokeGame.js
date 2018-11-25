@@ -335,46 +335,51 @@ class PokeGame extends Component {
     return (
       <div>
         {this.state.isLoaded && !this.state.winner && (
-          <div className='player-container'>
-            <div>
-              <div>
-                <h3>Your champion!</h3>
+          <div>
+              <div className='player-container'>
                 <div>
-                  <img src={this.state.player.sprite} className='player-img' id="playerSprite"/>
-                  <br />
-                  <h3 className="player-name">{this.state.player.pokeName}</h3>
-                </div>
-              <div>
-                <progress id='playerHealth' className="success" value='100' max='100' />
-              </div>
-              </div>
-              <div>
-                {this.state.player.moves.map(move => (
-                  <button
-                      disabled={this.state.buttonsDisabled}
-                    key={'move' + move.id}
-                    onClick={() => this.toggleMove(move)}
-                    className={this.state.buttonsDisabled ? 'disab-attack-button':'attack-button'}
-                  >
-                    {move.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div>
-              <div>
-                <h3>Your opponent!</h3>
-                <div>
-                  <img src={this.state.computer.sprite} className='enemy-img' id="comSprite"/>
-                  <br />
-                  <h3 className="player-name">{this.state.computer.pokeName}</h3>
+                  <div>
+                    <h3>Your champion!</h3>
                     <div>
-                      <progress id='comHealth' className="success" value='100' max='100' />
+                      <img src={this.state.player.sprite} className='player-img' id="playerSprite"/>
+                      <br />
+                      <h3 className="player-name">{this.state.player.pokeName}</h3>
                     </div>
-                    <h6>{this.state.enemyAttack}</h6>
+                  <div>
+                    <progress id='playerHealth' className="success" value='100' max='100' />
+                  </div>
+                  </div>
+                  <div>
+                    {this.state.player.moves.map(move => (
+                      <button
+                          disabled={this.state.buttonsDisabled}
+                        key={'move' + move.id}
+                        onClick={() => this.toggleMove(move)}
+                        className={this.state.buttonsDisabled ? 'disab-attack-button':'attack-button'}
+                      >
+                        {move.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <h3>Your opponent!</h3>
+                    <div>
+                      <img src={this.state.computer.sprite} className='enemy-img' id="comSprite"/>
+                      <br />
+                      <h3 className="player-name">{this.state.computer.pokeName}</h3>
+                        <div>
+                          <progress id='comHealth' className="success" value='100' max='100' />
+                        </div>
+                        <h6>{this.state.enemyAttack}</h6>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+              <button className='quit-button' onClick={this.props.endGame}>
+                  {'QUIT'}
+              </button>
           </div>
         )}
 
