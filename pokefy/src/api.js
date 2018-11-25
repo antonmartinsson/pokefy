@@ -1,60 +1,6 @@
-export async function authorize(code) {
-  await fetch('/spotify/code', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      code,
-    }),
-  });
-}
+import stringSimilarity from 'string-similarity';
 
-export async function login() {
-  const res = await fetch('/spotify/auth');
-  const authUrl = (await res.json()).authUrl;
-  if (authUrl) {
-    window.location = authUrl;
-  }
-}
-
-export async function getRandomSong() {
-    const res = await fetch('/spotify/random-song');
-    const json = await res.json();
-    return json;
-}
-
-export async function getArtistGenres(artistId) {
-  const res = await fetch('/spotify/get-genre/' + artistId);
-  const json = await res.json();
-  return json.body.genres;
-}
-
-async function getPokemonType(type) {
-  console.log('get pokemon type');
-  const typeRes = await fetch('http://pokeapi.co/api/v2/type/' + type);
-  const json = await typeRes.json();
-  return json;
-}
-
-async function getPokemonDetails(randPokemon) {
-  console.log('get pokemon details');
-  const pokemonRes = await fetch('http://pokeapi.co/api/v2/pokemon/' + randPokemon);
-  const json = await pokemonRes.json();
-  return json;
-}
-
-export async function getMoveInformation(moveName) {
-  const moveRes = await fetch('http://pokeapi.co/api/v2/move/' + moveName);
-  return await moveRes.json();
-}
-
-export async function playSong(songId) {
-  await fetch('/spotify/play/' + songId);
-}
-
-async function getPokemonFromGenre(genre) {
-  var match = {
+const match = {
     acoustic: 'normal',
     afrobeat: 'water',
     'alt-rock': 'rock',
@@ -157,27 +103,119 @@ async function getPokemonFromGenre(genre) {
     'trip-hop': 'poison',
     'work-out': 'fighting',
     'world-music': 'normal',
-  };
-  const pokemonJSON = await getPokemonType(match[genre] || 'normal');
-  var pokeAmount = pokemonJSON.pokemon.length;
-  let randPokemonID, randPokemon, pokemon, sprite;
-  do {
-    randPokemonID = Math.round(Math.random() * (pokeAmount - 1));
-    randPokemon = pokemonJSON.pokemon[randPokemonID].pokemon.name;
-    pokemon = await getPokemonDetails(randPokemon);
-    sprite = pokemon.sprites.front_default;
-  } while (sprite === null);
+};
 
-  console.log(pokemon);
-  return pokemon;
+function findBestMatch(genre) {
+    return match[stringSimilarity.findBestMatch(genre, Object.keys(match)).bestMatch.target];
+}
+
+function calculateSimilarity(pokeType, songType) {
+    return stringSimilarity.compareTwoStrings(pokeType, songType);
+}
+
+function extractTypes(pokemon) {
+    return pokemon.types.map(t => t.type.name).join(" ");
+}
+
+const shuffleArray = arr => arr
+    .map(a => [Math.random(), a])
+    .sort((a, b) => a[0] - b[0])
+    .map(a => a[1]);
+
+export async function authorize(code) {
+    await fetch('/spotify/code', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            code,
+        }),
+    });
+}
+
+export async function login() {
+    const res = await fetch('/spotify/auth');
+    const authUrl = (await res.json()).authUrl;
+    if (authUrl) {
+        window.location = authUrl;
+    }
+}
+
+export async function getRandomSong() {
+    const res = await fetch('/spotify/random-song');
+    const json = await res.json();
+    return json;
+}
+
+export async function getArtistGenres(artistId) {
+    const res = await fetch('/spotify/get-genre/' + artistId);
+    const json = await res.json();
+    return json.body.genres;
+}
+
+async function getPokemonType(type) {
+    console.log('get pokemon type');
+    const typeRes = await fetch('http://pokeapi.co/api/v2/type/' + type);
+    const json = await typeRes.json();
+    return json;
+}
+
+async function getPokemonDetails(randPokemon) {
+    console.log('get pokemon details');
+    const pokemonRes = await fetch('http://pokeapi.co/api/v2/pokemon/' + randPokemon);
+    const json = await pokemonRes.json();
+    return json;
+}
+
+export async function getMoveInformation(moveName) {
+    const moveRes = await fetch('http://pokeapi.co/api/v2/move/' + moveName);
+    return await moveRes.json();
+}
+
+export async function playSong(songId) {
+    await fetch('/spotify/play/' + songId);
+}
+
+async function getPokemonFromGenre(genres) {
+    const topGenre = findBestMatch(genres[0]);
+    const songTypes = genres.map(g => findBestMatch(g)).join(" ");
+    const pokemonJSON = await getPokemonType(topGenre || 'normal');
+    try {
+        let pokemons = shuffleArray(pokemonJSON.pokemon);
+        const pokemonLimit = 15;
+        pokemons = pokemons.slice(0, pokemonLimit);
+
+        pokemons = await Promise.all(pokemons.map(async poke => await getPokemonDetails(poke.pokemon.name)));
+        pokemons.forEach(p => {
+            p.similarity = calculateSimilarity(
+                extractTypes(p), songTypes
+            )
+        });
+
+        pokemons.sort(function (a, b) {
+            return -(a.similarity - b.similarity);
+        });
+
+        let pokemon, sprite;
+        let i = 0;
+        do {
+            pokemon = pokemons[i++];
+            sprite = pokemon.sprites.front_default;
+        } while (sprite === null);
+
+        console.log(pokemon);
+        return pokemon;
+    } catch (err) {
+        return getPokemonDetails(pokemonJSON.pokemon[0].pokemon.name);
+    }
+
 }
 
 export async function getPokemonFromTrack(track) {
-  const artistId = track.track.artists[0].id;
-  const genres = await getArtistGenres(artistId);
-  return await getPokemonFromGenre((genres[0] || '').split(' ')[0]);
+    const artistId = track.track.artists[0].id;
+    const genres = await getArtistGenres(artistId);
+    let genreNames = [];
+    genres.forEach(g => genreNames.push((g || '').split(' ')));
+    return await getPokemonFromGenre(genres);
 }
-
-//export async function getPokemonFromGenre(genre) {
-//  return {};
-//}
