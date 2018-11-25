@@ -92,7 +92,7 @@ class PokeGame extends Component {
       },
     });
 
-    await sleep(3000);
+    await sleep(1000);
 
     // Computer's move
     attackMove = this.state.computer.moves[Math.floor(Math.random() * NO_MOVES)];
@@ -116,43 +116,54 @@ class PokeGame extends Component {
     });
   }
 
-  onChange = event => {
-    this.setState({ player: { type: event.target.value } });
-  };
+  static getPokeSprite(pokemon) {
+    return pokemon.sprites.front_default;
+  }
+
+  static getPokeName(pokemon) {
+      let pokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+
+      if (pokemonName.includes('-')) {
+          pokemonName = pokemonName.substring(0, pokemonName.indexOf('-'));
+      }
+      return pokemonName
+  }
+
+  static async getPokeMoves(pokemon) {
+      // var moves = pokemon.moves.filter(move => move.power); ONLY FOR DAMAGE MOVES
+      let moves = pokemon.moves
+          .map(x => ({x, r: Math.random()}))
+          .sort((a, b) => a.r - b.r)
+          .map(a => a.x)
+          .slice(0, NO_MOVES);
+      moves =  await Promise.all(moves.map(move => api.getMoveInformation(move.move.name)));
+      return moves
+  }
 
   async initializeGame() {
-    const pokemon = this.props.pokemon;
-    console.log(pokemon);
+    console.log("INITIALIZATION");
 
-    var sprite = pokemon.sprites.front_default;
+    const playerPokemon = this.props.pokemon;
+    const opponentPokemon = this.props.opponent;
 
-    // If the Pokémon doesn't have a sprite, just get another Pokémon.
+    let playerSprite = PokeGame.getPokeSprite(playerPokemon);
+    let opponentSprite = PokeGame.getPokeSprite(opponentPokemon);
 
-    var pokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+    let playerPokeName = PokeGame.getPokeName(playerPokemon);
+    let opponentPokeName = PokeGame.getPokeName(opponentPokemon);
 
-    if (pokemonName.includes('-')) {
-      pokemonName = pokemonName.substring(0, pokemonName.indexOf('-'));
-    }
-
-    // var moves = pokemon.moves.filter(move => move.power);
-    var moves = pokemon.moves
-      .map(x => ({ x, r: Math.random() }))
-      .sort((a, b) => a.r - b.r)
-      .map(a => a.x)
-      .slice(0, NO_MOVES);
-    moves = await Promise.all(moves.map(move => api.getMoveInformation(move.move.name)));
-
-    console.log(moves);
+    let playerMoves = await PokeGame.getPokeMoves(playerPokemon);
+    let opponentMoves = await PokeGame.getPokeMoves(opponentPokemon);
 
     //TODO: Change for computer
     this.setState({
       move: 0,
       player: {
         name: 'player',
-        pokeName: pokemonName,
-        sprite: sprite,
-        pokemon: pokemon,
-        moves: moves,
+        pokeName: playerPokeName,
+        sprite: playerSprite,
+        pokemon: playerPokemon,
+        moves: playerMoves,
         type: this.state.player.type,
         level: 0,
         health: 100,
@@ -160,10 +171,10 @@ class PokeGame extends Component {
 
       computer: {
         name: 'computer',
-        pokeName: pokemonName,
-        pokemon: pokemon,
-        sprite: sprite,
-        moves: moves,
+        pokeName: opponentPokeName,
+        pokemon: opponentPokemon,
+        sprite: opponentSprite,
+        moves: opponentMoves,
         type: this.state.player.type,
         level: 0,
         health: 100,
@@ -209,15 +220,15 @@ class PokeGame extends Component {
             </div>
             <div>
               <div>
-                <h3>{'Enemy picked: ' + this.state.player.pokemon.name}</h3>
+                <h3>{'Enemy picked: ' + this.state.computer.pokemon.name}</h3>
                 <div>
-                  <img src={this.state.player.sprite} className='enemy-img' />
+                  <img src={this.state.computer.sprite} className='enemy-img' />
                   <br />
-                  <h3>{this.state.player.pokeName}</h3>
+                  <h3>{this.state.computer.pokeName}</h3>
                 </div>
               </div>
               <div>
-                {this.state.player.moves.map(move => (
+                {this.state.computer.moves.map(move => (
                   <button
                     key={'move' + move.id}
                     onClick={() => this.toggleMove(move)}

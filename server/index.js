@@ -83,6 +83,20 @@ app.get('/spotify/play/:songId', async (req, res) => {
   spotifyApi.play({ uris: ['spotify:track:' + songId] });
 });
 
+app.get('/spotify/random-song', async (req, res) => {
+    console.log('GET /spotify/random-song');
+    let alphabet = 'abcdefghijklmnopqrstuvwxyz';
+    let query = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+    console.log('query : ' + query);
+    spotifyApi.searchTracks(query, {limit: 1})
+        .then(function (data) {
+            console.log(data.body.tracks.items[0]);
+            res.status(200).send(data.body.tracks.items[0]);
+        }, function (err) {
+            console.error(err);
+        });
+});
+
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT} 🔥`);
 });

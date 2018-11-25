@@ -24,8 +24,9 @@ class GridItem extends Component {
 
   async moveToGame() {
     const pokemon = await api.getPokemonFromTrack(this.props.track);
+    const track = this.props.track;
     const trackId = this.props.track.track.id;
-    this.props.moveToGame(pokemon, trackId);
+    this.props.moveToGame(pokemon, track, trackId);
   }
 
   getImage = () => (this.state.clicked ? bulba : this.props.track.track.album.images[0].url);

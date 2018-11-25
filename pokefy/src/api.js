@@ -18,6 +18,12 @@ export async function login() {
   }
 }
 
+export async function getRandomSong() {
+    const res = await fetch('/spotify/random-song');
+    const json = await res.json();
+    return json;
+}
+
 export async function getArtistGenres(artistId) {
   const res = await fetch('/spotify/get-genre/' + artistId);
   const json = await res.json();

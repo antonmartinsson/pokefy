@@ -11,6 +11,9 @@ class App extends Component {
       gameState: 'login',
       recentTracks: [],
       currentPokemon: null,
+        opponentPokemon: null,
+        currentTrack: null,
+        opponentTrack: null,
       playedTrackIds: {},
     };
 
@@ -42,11 +45,6 @@ class App extends Component {
     this.setState({ recentTracks: json.body.items });
   };
 
-  getAlbum = async () => {
-    const genres = await api.getArtistGenres('52zMTJCKluDlFwMQWmccY7');
-    console.log(genres);
-  };
-
   moveToGrid = () => {
     this.setState({
       gameState: 'grid',
@@ -54,12 +52,17 @@ class App extends Component {
     this.getRecent();
   };
 
-  moveToGame = (pokemon, trackId) => {
-    this.setState(state => ({
-      gameState: 'game',
-      currentPokemon: pokemon,
-      playedTrackIds: { ...state.playedTrackIds, [trackId]: true },
-    }));
+  moveToGame = async (pokemon, track, trackId) => {
+      let randomTrack = {track: await api.getRandomSong()};
+      let opponentPokemon = await api.getPokemonFromTrack(randomTrack);
+      this.setState(state => ({
+          gameState: 'game',
+          currentPokemon: pokemon,
+          opponentPokemon: opponentPokemon,
+          currentTrack: track,
+          opponentTrack: randomTrack,
+          playedTrackIds: {...state.playedTrackIds, [trackId]: true},
+      }));
   };
 
   render() {
@@ -93,7 +96,13 @@ class App extends Component {
       return (
         <div className='App'>
           <header className='App-header'>
-            <PokeGame action={this.moveToGrid} pokemon={this.state.currentPokemon} />
+            <PokeGame
+                action={this.moveToGrid}
+                pokemon={this.state.currentPokemon}
+                opponent={this.state.opponentPokemon}
+                playerTrack={this.state.currentTrack}
+                opponentTrack={this.state.opponentTrack}
+            />
           </header>
         </div>
       );
