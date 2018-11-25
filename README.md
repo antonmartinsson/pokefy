@@ -1,5 +1,5 @@
 # pokefy
-A devX 2018 hack
+### A devX 2018 hack
 
 Pokéfy is a web application developed at Spotify HQ in Stockholm. It uses both the Spotify Web API, and the open source Pokéapi, to create a silly little game. Upon authorizing the app to access your Spotify music listening history, it presents you with your 10 most recently played songs and prompts you to choose one. It then generates a Pokémon based on the genre of music you selected (for example, a rock song gives you a random Rock-type Pokémon), and presents a short battle scenario you can play through. 
 
