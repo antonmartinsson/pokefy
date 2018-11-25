@@ -247,6 +247,16 @@ progress[value]::-webkit-progress-bar {
   100% { opacity: 1; }
 }
 
+@-webkit-keyframes faint {
+  0% { opacity: 1; } 
+  100% { opacity: 0; }
+}
+@keyframes faint {
+  0% { opacity: 1; } 
+  100% { opacity: 0; } 
+}
+
+
 .player-name {
   margin: 0;
 }
