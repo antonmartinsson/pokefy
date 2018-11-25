@@ -171,3 +171,16 @@ progress[value]::-webkit-progress-value {
   color: black;
   border-color: white;
 }
+
+.disab-attack-button {
+  cursor: pointer;
+  border: solid;
+  margin: 2px 2px 2px;
+  min-height: 40px;
+  width: 200px;
+  font-family: Raleway, serif;
+  font-weight: bold;
+  background: transparent;
+  opacity: 0.2;
+  color: white;
+}
