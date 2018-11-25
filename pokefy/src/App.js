@@ -11,9 +11,9 @@ class App extends Component {
       gameState: 'login',
       recentTracks: [],
       currentPokemon: null,
-        opponentPokemon: null,
-        currentTrack: null,
-        opponentTrack: null,
+      opponentPokemon: null,
+      currentTrack: null,
+      opponentTrack: null,
       playedTrackIds: {},
     };
 
@@ -52,27 +52,31 @@ class App extends Component {
     this.getRecent();
   };
 
-  moveToGame = async (pokemon, track, trackId) => {
-      let randomTrack = {track: await api.getRandomSong()};
-      let opponentPokemon = await api.getPokemonFromTrack(randomTrack);
-      this.setState(state => ({
-          gameState: 'game',
-          currentPokemon: pokemon,
-          opponentPokemon: opponentPokemon,
-          currentTrack: track,
-          opponentTrack: randomTrack,
-          playedTrackIds: {...state.playedTrackIds, [trackId]: true},
-      }));
+  moveToGame = async selectedTrack => {
+    const pokemon = await api.getPokemonFromTrack(selectedTrack);
+    let randomTrack = { track: await api.getRandomSong() };
+    let opponentPokemon = await api.getPokemonFromTrack(randomTrack);
+    this.setState(state => ({
+      gameState: 'game',
+      currentPokemon: pokemon,
+      opponentPokemon: opponentPokemon,
+      currentTrack: selectedTrack,
+      opponentTrack: randomTrack,
+      playedTrackIds: { ...state.playedTrackIds, [selectedTrack.track.id]: true },
+    }));
   };
 
   render() {
-    if (this.state.gameState === 'login')
+    const { gameState } = this.state;
+
+    if (gameState === 'login') {
       return (
         <div className='App'>
           <header className='App-header'>
             <div className='logoDiv'>
-              <img src='https://i.imgur.com/xBo8wTW.png' />
+              <img src='https://i.imgur.com/xBo8wTW.png' alt='' />
               <img
+                alt=''
                 className='pokeball'
                 src='https://i.imgur.com/a6eN9Ix.png'
                 onClick={this.moveToGrid}
@@ -82,7 +86,9 @@ class App extends Component {
           </header>
         </div>
       );
-    else if (this.state.gameState === 'grid')
+    }
+
+    if (gameState === 'grid') {
       return (
         <div className='App'>
           <Grid
@@ -92,20 +98,23 @@ class App extends Component {
           />
         </div>
       );
-    else if (this.state.gameState === 'game')
+    }
+
+    if (gameState === 'game') {
       return (
         <div className='App'>
           <header className='App-header'>
             <PokeGame
-                action={this.moveToGrid}
-                pokemon={this.state.currentPokemon}
-                opponent={this.state.opponentPokemon}
-                playerTrack={this.state.currentTrack}
-                opponentTrack={this.state.opponentTrack}
+              action={this.moveToGrid}
+              pokemon={this.state.currentPokemon}
+              opponent={this.state.opponentPokemon}
+              playerTrack={this.state.currentTrack}
+              opponentTrack={this.state.opponentTrack}
             />
           </header>
         </div>
       );
+    }
   }
 }
 

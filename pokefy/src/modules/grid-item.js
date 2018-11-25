@@ -1,38 +1,19 @@
 import React, { Component } from 'react';
-import bulba from '../bulba.png';
 import * as api from '../api';
 
 class GridItem extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      clicked: false,
-    };
-
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick() {
+  handleClick = () => {
     if (this.props.readyForGame === false) {
       this.setState({
         clicked: true,
       });
     }
     api.playSong(this.props.track.track.id);
-    this.moveToGame();
-  }
-
-  async moveToGame() {
-    const pokemon = await api.getPokemonFromTrack(this.props.track);
-    const track = this.props.track;
-    const trackId = this.props.track.track.id;
-    this.props.moveToGame(pokemon, track, trackId);
-  }
-
-  getImage = () => (this.state.clicked ? bulba : this.props.track.track.album.images[0].url);
+    this.props.moveToGame(this.props.track);
+  };
 
   render() {
-    const image = this.getImage();
+    const image = this.props.track.track.album.images[0].url;
 
     return (
       <div>
