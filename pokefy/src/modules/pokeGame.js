@@ -109,7 +109,7 @@ class PokeGame extends Component {
     else {
       damage = clamp(damage * modifier, 0.3 * baseHealth);
     }
-    
+
     if (playerAttacking == true) {
       let comHealth = document.getElementById('comHealth');
       comHealth.value -= damage; //Or whatever you want to do with it.
@@ -299,7 +299,7 @@ class PokeGame extends Component {
                   <h3 className="player-name">{this.state.player.pokeName}</h3>
                 </div>
               <div>
-                <progress id='playerHealth' class="success" value='100' max='100' />
+                <progress id='playerHealth' className="success" value='100' max='100' />
               </div>
               </div>
               <div>
@@ -323,7 +323,7 @@ class PokeGame extends Component {
                   <br />
                   <h3 className="player-name">{this.state.computer.pokeName}</h3>
                     <div>
-                      <progress id='comHealth' class="success" value='100' max='100' />
+                      <progress id='comHealth' className="success" value='100' max='100' />
                     </div>
                     <h6>{this.state.enemyAttack}</h6>
                 </div>
