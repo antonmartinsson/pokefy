@@ -164,6 +164,9 @@ class PokeGame extends Component {
           playerAnimation();
           if (computerDefenseHealth < 0) {
               winner = this.state.player;
+              var com = document.getElementById("comSprite");
+              com.style.WebkitAnimation = "faint 1.5s 1"; // Code for Chrome, Safari and Opera
+              com.style.animation = "faint 1.5s 1"; // Standard syntax
               return computerDefenseHealth;
           }
           this.setState({
@@ -201,6 +204,9 @@ class PokeGame extends Component {
 
         if (playerDefenseHealth < 0) {
             winner = this.state.computer;
+            var player = document.getElementById("playerSprite");
+            player.style.WebkitAnimation = "faint 1.5s 1"; // Code for Chrome, Safari and Opera
+            player.style.animation = "faint 1.5s 1"; // Standard syntax
             return playerDefenseHealth;
         }
 
