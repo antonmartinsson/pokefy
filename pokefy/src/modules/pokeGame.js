@@ -151,6 +151,7 @@ class PokeGame extends Component {
     const computerTempo = this.state.computer.tempo;
     console.log(playerTempo);
     console.log(computerTempo);
+    let winner;
 
     const playerMove = (disableButton) => {
         //Player's move
@@ -160,8 +161,9 @@ class PokeGame extends Component {
               attackMove,
               true
           );
+          playerAnimation();
           if (computerDefenseHealth < 0) {
-              this.setState({ winner: this.state.player });
+              winner = this.state.player;
               return computerDefenseHealth;
           }
           this.setState({
@@ -171,7 +173,6 @@ class PokeGame extends Component {
               },
               buttonsDisabled: disableButton,
           });
-          playerAnimation();
       return computerDefenseHealth;
       }
 
@@ -200,7 +201,7 @@ class PokeGame extends Component {
         //await sleep(1000);
 
         if (playerDefenseHealth < 0) {
-            this.setState({ winner: this.state.computer });
+            winner = this.state.computer;
             return playerDefenseHealth;
         }
 
@@ -233,7 +234,7 @@ class PokeGame extends Component {
               playerMove(false)
           }
       }
-
+      this.setState({ winner });
   }
 
   static getPokeSprite(pokemon) {
