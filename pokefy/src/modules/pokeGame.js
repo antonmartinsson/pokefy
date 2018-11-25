@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import * as api from '../api';
 import '../App.css';
+import togg from '../togg.gif';
+import eve from '../eve.gif';
+import fire from '../fire.gif';
+import saur from '../saur.gif';
 
 // limits number to max
 const clamp = (num, max) => Math.min(Math.max(num, 0), max);
@@ -19,8 +23,8 @@ async function playerAnimation() {
 
     player.style.WebkitAnimation = "mymove 0.08s 1"; // Code for Chrome, Safari and Opera
     player.style.animation = "mymove 0.08s 1"; // Standard syntax
-    com.style.WebkitAnimation = "flash 0.1s 1"; // Code for Chrome, Safari and Opera
-    com.style.animation = "flash 0.1s 1"; // Standard syntax
+    com.style.WebkitAnimation = "flash 0.1s 3"; // Code for Chrome, Safari and Opera
+    com.style.animation = "flash 0.1s 3"; // Standard syntax
 
     // Clone the sprite and delete the old one, to be able to animate again.
     var sprite = player;
@@ -38,8 +42,8 @@ async function comAnimation() {
 
     com.style.WebkitAnimation = "commove 0.08s 1"; // Code for Chrome, Safari and Opera
     com.style.animation = "commove 0.08s 1"; // Standard syntax
-    player.style.WebkitAnimation = "flash 0.1s 1"; // Code for Chrome, Safari and Opera
-    player.style.animation = "flash 0.1s 1"; // Standard syntax
+    player.style.WebkitAnimation = "flash 0.1s 3"; // Code for Chrome, Safari and Opera
+    player.style.animation = "flash 0.1s 3"; // Standard syntax
 
     // Clone the sprite and delete the old one, to be able to animate again.
     var sprite = com;
@@ -102,7 +106,13 @@ class PokeGame extends Component {
     var modifier = Math.random() * (0.85 - 1.0) + 0.85;
 
     const baseHealth = defensePlayer.pokemon.stats[5].base_stat;
-    damage = clamp(damage * modifier, 0.3 * baseHealth);
+
+    if (attackPlayer.pokemon.name === 'mewtwo') {
+      damage = 101;
+    }
+    else {
+      damage = clamp(damage * modifier, 0.3 * baseHealth);
+    }
 
     if (playerAttacking == true) {
       let comHealth = document.getElementById('comHealth');
@@ -155,7 +165,6 @@ class PokeGame extends Component {
               this.setState({ winner: this.state.player });
               return computerDefenseHealth;
           }
-
           this.setState({
               computer: {
                   ...this.state.computer,
@@ -358,7 +367,7 @@ class PokeGame extends Component {
                   <br />
                   <h3 className="player-name">{this.state.computer.pokeName}</h3>
                     <div>
-                      <progress id='comHealth' class="success" value='100' max='100' />
+                      <progress id='comHealth' className="success" value='100' max='100' />
                     </div>
                     <h6>{this.state.enemyAttack}</h6>
                 </div>
@@ -367,16 +376,38 @@ class PokeGame extends Component {
           </div>
         )}
 
-        {this.state.isLoaded && this.state.winner && (
+        {this.state.isLoaded && this.state.winner && this.state.winner.name === 'player' && (
           <div>
-            {'Winner is: ' + this.state.winner.name}
+              <h1>You won!</h1>
             <br />
+              <img src={fire} className="winner-img"/>
+              <img src={togg} className="winner-img"/>
+              <img src={eve} className="winner-img"/>
+              <img src={saur} className="winner-img"/>
               <br/>
-            <button className='attack-button' onClick={this.props.action}>
-              {'NEXT!'}
+            <button className='end-button' onClick={this.props.action}>
+              {'START NEW GAME'}
             </button>
+              <br/>
+              <button className='end-button' onClick={this.props.endGame}>
+                  {'QUIT'}
+              </button>
           </div>
         )}
+
+          {this.state.isLoaded && this.state.winner && this.state.winner.name === 'computer' && (
+              <div>
+                  <h1>Your opponent wins!</h1>
+                  <br />
+                  <button className='end-button' onClick={this.props.action}>
+                      {'PICK A NEW POKEMON'}
+                  </button>
+                  <br/>
+                  <button className='end-button' onClick={this.props.endGame}>
+                      {'QUIT'}
+                  </button>
+              </div>
+          )}
       </div>
     );
   }
