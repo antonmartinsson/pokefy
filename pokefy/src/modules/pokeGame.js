@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import * as api from '../api';
 import '../App.css';
-import togg from '../togg.gif';
 import eve from '../eve.gif';
 import fire from '../fire.gif';
 import saur from '../saur.gif';
@@ -337,7 +336,6 @@ class PokeGame extends Component {
               <h1>You won!</h1>
             <br />
               <img src={fire} className="winner-img"/>
-              <img src={togg} className="winner-img"/>
               <img src={eve} className="winner-img"/>
               <img src={saur} className="winner-img"/>
               <br/>
@@ -356,7 +354,7 @@ class PokeGame extends Component {
                   <h1>Your opponent wins!</h1>
                   <br />
                   <button className='end-button' onClick={this.props.action}>
-                      {'PICK A NEW POKEMON'}
+                      {'START NEW GAME'}
                   </button>
                   <br/>
                   <button className='end-button' onClick={this.props.endGame}>
