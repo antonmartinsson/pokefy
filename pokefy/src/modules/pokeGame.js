@@ -23,8 +23,8 @@ async function playerAnimation() {
 
     player.style.WebkitAnimation = "mymove 0.08s 1"; // Code for Chrome, Safari and Opera
     player.style.animation = "mymove 0.08s 1"; // Standard syntax
-    com.style.WebkitAnimation = "flash 0.1s 1"; // Code for Chrome, Safari and Opera
-    com.style.animation = "flash 0.1s 1"; // Standard syntax
+    com.style.WebkitAnimation = "flash 0.1s 3"; // Code for Chrome, Safari and Opera
+    com.style.animation = "flash 0.1s 3"; // Standard syntax
 
     // Clone the sprite and delete the old one, to be able to animate again.
     var sprite = player;
@@ -42,8 +42,8 @@ async function comAnimation() {
 
     com.style.WebkitAnimation = "commove 0.08s 1"; // Code for Chrome, Safari and Opera
     com.style.animation = "commove 0.08s 1"; // Standard syntax
-    player.style.WebkitAnimation = "flash 0.1s 1"; // Code for Chrome, Safari and Opera
-    player.style.animation = "flash 0.1s 1"; // Standard syntax
+    player.style.WebkitAnimation = "flash 0.1s 3"; // Code for Chrome, Safari and Opera
+    player.style.animation = "flash 0.1s 3"; // Standard syntax
 
     // Clone the sprite and delete the old one, to be able to animate again.
     var sprite = com;
@@ -102,8 +102,14 @@ class PokeGame extends Component {
     var modifier = Math.random() * (0.85 - 1.0) + 0.85;
 
     const baseHealth = defensePlayer.pokemon.stats[5].base_stat;
-    damage = clamp(damage * modifier, 0.3 * baseHealth);
 
+    if (attackPlayer.pokemon.name === 'mewtwo') {
+      damage = 101;
+    }
+    else {
+      damage = clamp(damage * modifier, 0.3 * baseHealth);
+    }
+    
     if (playerAttacking == true) {
       let comHealth = document.getElementById('comHealth');
       comHealth.value -= damage; //Or whatever you want to do with it.
