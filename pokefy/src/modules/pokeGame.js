@@ -13,6 +13,44 @@ const sleep = time =>
     }, time);
   });
 
+async function playerAnimation() {
+    var player = document.getElementById("playerSprite");
+    var com = document.getElementById("comSprite");
+
+    player.style.WebkitAnimation = "mymove 0.08s 1"; // Code for Chrome, Safari and Opera
+    player.style.animation = "mymove 0.08s 1"; // Standard syntax
+    com.style.WebkitAnimation = "flash 0.1s 1"; // Code for Chrome, Safari and Opera
+    com.style.animation = "flash 0.1s 1"; // Standard syntax
+    
+    // Clone the sprite and delete the old one, to be able to animate again.
+    var sprite = player;
+    var newSprite = player.cloneNode(true);
+    sprite.parentNode.replaceChild(newSprite, sprite);
+
+    var sprite = com;
+    var newSprite = com.cloneNode(true);
+    com.parentNode.replaceChild(newSprite, sprite);
+}
+
+async function comAnimation() {
+    var com = document.getElementById("comSprite");
+    var player = document.getElementById("playerSprite");
+
+    com.style.WebkitAnimation = "commove 0.08s 1"; // Code for Chrome, Safari and Opera
+    com.style.animation = "commove 0.08s 1"; // Standard syntax
+    player.style.WebkitAnimation = "flash 0.1s 1"; // Code for Chrome, Safari and Opera
+    player.style.animation = "flash 0.1s 1"; // Standard syntax
+    
+    // Clone the sprite and delete the old one, to be able to animate again.
+    var sprite = com;
+    var newSprite = com.cloneNode(true);
+    sprite.parentNode.replaceChild(newSprite, sprite);
+
+    var sprite = player;
+    var newSprite = player.cloneNode(true);
+    sprite.parentNode.replaceChild(newSprite, sprite);
+}
+
 const NO_MOVES = 4;
 
 const initialState = {
@@ -80,6 +118,10 @@ class PokeGame extends Component {
       attackMove,
       true
     );
+
+    playerAnimation();
+    await sleep(1000);
+
     if (computerDefenseHealth < 0) {
       this.setState({ winner: this.state.player });
       return;
@@ -92,8 +134,6 @@ class PokeGame extends Component {
       },
     });
 
-    await sleep(1000);
-
     // Computer's move
     attackMove = this.state.computer.moves[Math.floor(Math.random() * NO_MOVES)];
     var playerDefenseHealth = PokeGame.play(
@@ -102,6 +142,10 @@ class PokeGame extends Component {
       attackMove,
       false
     );
+
+    comAnimation();
+    await sleep(1000);
+
     if (playerDefenseHealth < 0) {
       this.setState({ winner: this.state.computer });
       return;
@@ -204,7 +248,7 @@ class PokeGame extends Component {
               <div>
                 <h3>{'Player picked: ' + this.state.player.pokemon.name}</h3>
                 <div>
-                  <img src={this.state.player.sprite} className='player-img' />
+                  <img src={this.state.player.sprite} className='player-img' id="playerSprite"/>
                   <br />
                   <h3>{this.state.player.pokeName}</h3>
                 </div>
@@ -229,7 +273,7 @@ class PokeGame extends Component {
               <div>
                 <h3>{'Enemy picked: ' + this.state.computer.pokemon.name}</h3>
                 <div>
-                  <img src={this.state.computer.sprite} className='enemy-img' />
+                  <img src={this.state.computer.sprite} className='enemy-img' id="comSprite"/>
                   <br />
                   <h3>{this.state.computer.pokeName}</h3>
                 </div>

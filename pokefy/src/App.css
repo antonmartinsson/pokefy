@@ -171,3 +171,45 @@ progress[value]::-webkit-progress-value {
   color: black;
   border-color: white;
 }
+
+#playerSprite {
+    position: relative;
+}
+
+#comSprite {
+    position: relative;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes mymove {
+    from {left: 0px;}
+    to {left: 100px;}
+}
+
+@keyframes mymove {
+    from {left: 0px;}
+    to {left: 100px;}
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes commove {
+    from {right: 0px;}
+    to {right: 100px;}
+}
+
+@keyframes commove {
+    from {right: 0px;}
+    to {right: 100px;}
+}
+
+@-webkit-keyframes flash {
+  0% { opacity: 1; } 
+  50% { opacity: 0; } 
+  100% { opacity: 1; }
+}
+@keyframes flash {
+  0% { opacity: 1; } 
+  50% { opacity: 0; } 
+  100% { opacity: 1; }
+}
+
