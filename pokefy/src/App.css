@@ -233,3 +233,27 @@ progress[value]::-webkit-progress-value {
   margin-bottom: 30px;
 }
 
+.winner-img {
+  height: 60px;
+  margin-bottom: 30px;
+}
+
+.end-button{
+  cursor: pointer;
+  border: solid;
+  margin: 6px;
+  min-height: 100px;
+  width: 300px;
+  font-size: 20px;
+  font-family: Raleway, serif;
+  font-weight: bold;
+  background: transparent;
+  color: white;
+}
+
+.end-button:hover {
+  background: white;
+  color: black;
+  border-color: white;
+}
+

@@ -68,6 +68,12 @@ class App extends Component {
     });
   };
 
+  moveToStart = () => {
+    this.setState({
+        gameState: 'login',
+    });
+  }
+
   render() {
     const { gameState } = this.state;
 
@@ -120,6 +126,7 @@ class App extends Component {
               opponent={this.state.opponentPokemon}
               playerTrack={this.state.currentTrack}
               opponentTrack={this.state.opponentTrack}
+              endGame={this.moveToStart}
             />
           </header>
         </div>

@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import * as api from '../api';
 import '../App.css';
+import togg from '../togg.gif';
+import eve from '../eve.gif';
+import fire from '../fire.gif';
+import saur from '../saur.gif';
 
 // limits number to max
 const clamp = (num, max) => Math.min(Math.max(num, 0), max);
@@ -140,8 +144,6 @@ class PokeGame extends Component {
 
     // Computer's move
     attackMove = this.state.computer.moves[Math.floor(Math.random() * NO_MOVES)];
-      console.log(attackMove.name);
-
       if (attackMove.name) {
           this.setState({
               enemyAttack: 'OPPONENT USED ' + attackMove.name + '!'
@@ -256,6 +258,10 @@ class PokeGame extends Component {
     this.state = initialState;
   }
 
+  toggleDancePokemon = () => {
+
+  }
+
   render() {
     return (
       <div>
@@ -303,16 +309,38 @@ class PokeGame extends Component {
           </div>
         )}
 
-        {this.state.isLoaded && this.state.winner && (
+        {this.state.isLoaded && this.state.winner && this.state.winner.name === 'player' && (
           <div>
-            {'Winner is: ' + this.state.winner.name}
+              <h1>You won!</h1>
             <br />
+              <img src={fire} className="winner-img"/>
+              <img src={togg} className="winner-img"/>
+              <img src={eve} className="winner-img"/>
+              <img src={saur} className="winner-img"/>
               <br/>
-            <button className='attack-button' onClick={this.props.action}>
-              {'NEXT!'}
+            <button className='end-button' onClick={this.props.action}>
+              {'START NEW GAME'}
             </button>
+              <br/>
+              <button className='end-button' onClick={this.props.endGame}>
+                  {'QUIT'}
+              </button>
           </div>
         )}
+
+          {this.state.isLoaded && this.state.winner && this.state.winner.name === 'computer' && (
+              <div>
+                  <h1>Your opponent wins!</h1>
+                  <br />
+                  <button className='end-button' onClick={this.props.action}>
+                      {'PICK A NEW POKEMON'}
+                  </button>
+                  <br/>
+                  <button className='end-button' onClick={this.props.endGame}>
+                      {'QUIT'}
+                  </button>
+              </div>
+          )}
       </div>
     );
   }
