@@ -166,6 +166,14 @@ async function getPokemonType(type) {
     return json;
 }
 
+export async function getTrackFeatures(songId){
+    console.log('Get Features of the track');
+    console.log(songId)
+    const trackRes = await fetch('/spotify/get-track-features/' + songId);
+    const json = await trackRes.json();
+    return json;
+}
+
 async function getPokemonDetails(randPokemon) {
     console.log('get pokemon details');
     const pokemonRes = await fetch('http://pokeapi.co/api/v2/pokemon/' + randPokemon);
