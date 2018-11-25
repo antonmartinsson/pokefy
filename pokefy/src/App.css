@@ -120,8 +120,8 @@
 
 .player-container {
   display: grid;
-  grid-gap: 50px;
-  grid-template-columns: 500px 500px;
+  grid-gap: 100px;
+  grid-template-columns: 600px 600px;
 }
 
 .player-img {
@@ -223,5 +223,13 @@ progress[value]::-webkit-progress-value {
   0% { opacity: 1; }
   50% { opacity: 0; }
   100% { opacity: 1; }
+}
+
+.player-name {
+  margin: 0;
+}
+
+.progress-bar{
+  margin-bottom: 30px;
 }
 
