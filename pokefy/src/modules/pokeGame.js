@@ -334,7 +334,7 @@ class PokeGame extends Component {
                   <h3 className="player-name">{this.state.player.pokeName}</h3>
                 </div>
               <div>
-                <progress id='playerHealth' class="success" value='100' max='100' />
+                <progress id='playerHealth' className="success" value='100' max='100' />
               </div>
               </div>
               <div>
