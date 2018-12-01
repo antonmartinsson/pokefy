@@ -1,27 +1,23 @@
 import React, { Component } from 'react';
 import * as api from './api';
+import Grid from './components/Grid';
+import PokeGame from './components/PokeGame';
+import Transition from './components/Transition';
 import './App.css';
-import Grid from './modules/grid';
-import PokeGame from './modules/pokeGame';
-import Loading from './modules/Loading';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      gameState: 'login',
-      recentTracks: [],
-      currentPokemon: null,
-      opponentPokemon: null,
-      currentTrack: null,
-      opponentTrack: null,
-      playedTrackIds: {},
-    };
-  }
+  state = {
+    gameState: 'login',
+    recentTracks: [],
+    currentPokemon: null,
+    opponentPokemon: null,
+    currentTrack: null,
+    opponentTrack: null,
+    playedTrackIds: {},
+  };
 
-  async componentDidMount() {
-    document.title = "Pokéfy";
-    await this.authorize();
+  componentDidMount() {
+    this.authorize();
   }
 
   async authorize() {
@@ -41,7 +37,6 @@ class App extends Component {
   getRecent = async () => {
     const data = await fetch('/spotify/recent-tracks');
     const json = await data.json();
-    console.log(json.body.items.map(item => item.track.name));
     this.setState({ recentTracks: json.body.items });
   };
 
@@ -52,9 +47,9 @@ class App extends Component {
     this.getRecent();
   };
 
-  moveToLoading = async selectedTrack => {
+  moveToTransition = async selectedTrack => {
     this.setState(state => ({
-      gameState: 'loading',
+      gameState: 'transition',
       currentTrack: selectedTrack,
       playedTrackIds: { ...state.playedTrackIds, [selectedTrack.track.id]: true },
     }));
@@ -71,9 +66,9 @@ class App extends Component {
 
   moveToStart = () => {
     this.setState({
-        gameState: 'login',
+      gameState: 'login',
     });
-  }
+  };
 
   render() {
     const { gameState } = this.state;
@@ -101,7 +96,7 @@ class App extends Component {
       return (
         <div className='App'>
           <Grid
-            action={this.moveToLoading}
+            action={this.moveToTransition}
             playedTrackIds={this.state.playedTrackIds}
             tracks={this.state.recentTracks}
           />
@@ -109,10 +104,10 @@ class App extends Component {
       );
     }
 
-    if (gameState === 'loading') {
+    if (gameState === 'transition') {
       return (
         <div className='App'>
-          <Loading currentTrack={this.state.currentTrack} moveToGame={this.moveToGame} />
+          <Transition currentTrack={this.state.currentTrack} moveToGame={this.moveToGame} />
         </div>
       );
     }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import * as api from '../api';
+import * as api from '../../api';
 
 class GridItem extends Component {
   handleClick = () => {
@@ -17,7 +17,7 @@ class GridItem extends Component {
 
     return (
       <div>
-        <img src={image} className='Grid-img' onClick={this.handleClick} />
+        <img src={image} alt='' className='Grid-img' onClick={this.handleClick} />
         <h3>{this.props.track.track.name}</h3>
       </div>
     );

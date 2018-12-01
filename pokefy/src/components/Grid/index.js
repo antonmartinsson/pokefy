@@ -1,16 +1,11 @@
 import React, { Component } from 'react';
-import '../App.css';
-import GridItem from './grid-item';
-import './grid.css';
+import GridItem from '../GridItem';
+import './styles.css';
 
 class Grid extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      readyForGame: false,
-    };
-  }
+  state = {
+    readyForGame: false,
+  };
 
   getTracks() {
     const { tracks, playedTrackIds } = this.props;
