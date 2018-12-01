@@ -1,13 +1,7 @@
 import React from 'react';
-import * as api from '../api';
-import './Loading.css';
-
-const sleep = time =>
-  new Promise(resolve => {
-    setTimeout(() => {
-      resolve();
-    }, time);
-  });
+import * as api from '../../api';
+import { sleep } from '../../utils';
+import './styles.css';
 
 function getPokeName(pokemon, track) {
   if (!pokemon) {
@@ -23,7 +17,7 @@ function getPokeName(pokemon, track) {
   return artist + ' ' + pokemonName;
 }
 
-class Loading extends React.Component {
+class Transition extends React.Component {
   state = {
     currentPokemon: null,
     genres: '',
@@ -107,4 +101,4 @@ class Loading extends React.Component {
   }
 }
 
-export default Loading;
+export default Transition;

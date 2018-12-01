@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import * as api from '../api';
+import * as api from '../../api';
+import './styles.css';
 
 class GridItem extends Component {
   handleClick = () => {
@@ -14,10 +15,11 @@ class GridItem extends Component {
 
   render() {
     const image = this.props.track.track.album.images[0].url;
+    const index = this.props.animationIndex;
 
     return (
-      <div>
-        <img src={image} className='Grid-img' onClick={this.handleClick} />
+      <div className='grid-item' style={{ '--i': index }}>
+        <img src={image} alt='' className='grid-img' onClick={this.handleClick} />
         <h3>{this.props.track.track.name}</h3>
       </div>
     );
