@@ -1,8 +1,8 @@
 .song-grid {
   display: grid;
   grid-gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  max-width: 1200px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  max-width: 1000px;
   margin: 20px auto 0 auto;
 }
 
@@ -13,7 +13,7 @@
 .title {
   font-size: 50px;
   font-weight: bold;
-  margin: 5% 0 0;
+  margin-top: 50px;
 }
 
 .subtitle {

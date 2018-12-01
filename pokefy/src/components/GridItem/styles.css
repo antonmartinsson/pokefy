@@ -1,0 +1,28 @@
+.grid-item {
+  opacity: 0;
+  animation: fadein 500ms;
+  animation-fill-mode: forwards;
+  animation-delay: calc(var(--i) * 70ms);
+}
+
+.grid-img {
+  display: inline-grid;
+  max-width: 100%;
+  filter: brightness(90%);
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.grid-img:hover {
+  filter: brightness(100%);
+  transform: scale(1.1);
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

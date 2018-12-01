@@ -4,6 +4,7 @@ import { clamp, sleep } from '../../utils';
 import eve from './eve.gif';
 import fire from './fire.gif';
 import saur from './saur.gif';
+import './styles.css';
 
 async function playerAnimation() {
   var player = document.getElementById('playerSprite');

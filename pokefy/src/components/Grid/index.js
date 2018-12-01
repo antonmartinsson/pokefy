@@ -36,10 +36,11 @@ class Grid extends Component {
         <div className='subtitle'>Let your music taste decide your next Pokémon champion!</div>
         <br />
         <div className='song-grid'>
-          {displayTracks.map(track => (
+          {displayTracks.map((track, index) => (
             <GridItem
-              track={track}
               key={track.played_at}
+              track={track}
+              animationIndex={index}
               moveToGame={this.props.action}
               ready={this.props.readyForGame}
             />
