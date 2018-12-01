@@ -1,2 +1,2 @@
 # Files ignored by Heroku
-/pokefy
+/client/src
