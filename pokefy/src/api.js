@@ -1,6 +1,8 @@
 import stringSimilarity from 'string-similarity';
 import match from './genreTypes';
 
+const POKEAPI = 'https://pokeapi.co/api/v2';
+
 export function findBestMatch(genre) {
   return match[stringSimilarity.findBestMatch(genre, Object.keys(match)).bestMatch.target];
 }
@@ -58,9 +60,25 @@ export async function getArtistGenres(artistId) {
 
 async function getPokemonType(type) {
   console.log('get pokemon type');
-  const typeRes = await fetch('http://pokeapi.co/api/v2/type/' + type);
+  const typeRes = await fetch(`${POKEAPI}/type/${type}`);
   const json = await typeRes.json();
   return json;
+}
+
+async function getPokemonDetails(randPokemon) {
+  console.log('get pokemon details');
+  const pokemonRes = await fetch(`${POKEAPI}/pokemon/${randPokemon}`);
+  const json = await pokemonRes.json();
+  return json;
+}
+
+export async function getMoveInformation(moveName) {
+  const moveRes = await fetch(`${POKEAPI}/move/${moveName}`);
+  return await moveRes.json();
+}
+
+export async function playSong(songId) {
+  await fetch('/spotify/play/' + songId);
 }
 
 export async function getTrackFeatures(songId) {
@@ -69,22 +87,6 @@ export async function getTrackFeatures(songId) {
   const trackRes = await fetch('/spotify/get-track-features/' + songId);
   const json = await trackRes.json();
   return json;
-}
-
-async function getPokemonDetails(randPokemon) {
-  console.log('get pokemon details');
-  const pokemonRes = await fetch('http://pokeapi.co/api/v2/pokemon/' + randPokemon);
-  const json = await pokemonRes.json();
-  return json;
-}
-
-export async function getMoveInformation(moveName) {
-  const moveRes = await fetch('http://pokeapi.co/api/v2/move/' + moveName);
-  return await moveRes.json();
-}
-
-export async function playSong(songId) {
-  await fetch('/spotify/play/' + songId);
 }
 
 async function getPokemonFromGenre(genres) {
@@ -121,13 +123,9 @@ async function getPokemonFromGenre(genres) {
   }
 }
 
-async function getMewtwo(genres) {
-  let pokemon, sprite;
-  var mewtwo = getPokemonDetails('mewtwo');
-  pokemon = mewtwo;
-  sprite = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png';
-
-  return pokemon;
+async function getMewtwo() {
+  const mewtwo = getPokemonDetails('mewtwo');
+  return mewtwo;
 }
 
 export async function getPokemonFromTrack(track) {

@@ -7,8 +7,8 @@ import saur from './saur.gif';
 import './styles.css';
 
 async function playerAnimation() {
-  var player = document.getElementById('playerSprite');
-  var com = document.getElementById('comSprite');
+  let player = document.getElementById('playerSprite');
+  let com = document.getElementById('comSprite');
 
   player.style.WebkitAnimation = 'mymove 0.08s 1'; // Code for Chrome, Safari and Opera
   player.style.animation = 'mymove 0.08s 1'; // Standard syntax
@@ -16,18 +16,18 @@ async function playerAnimation() {
   com.style.animation = 'flash 0.1s 3'; // Standard syntax
 
   // Clone the sprite and delete the old one, to be able to animate again.
-  var sprite = player;
-  var newSprite = player.cloneNode(true);
+  let sprite = player;
+  let newSprite = player.cloneNode(true);
   sprite.parentNode.replaceChild(newSprite, sprite);
 
-  var sprite = com;
-  var newSprite = com.cloneNode(true);
+  sprite = com;
+  newSprite = com.cloneNode(true);
   com.parentNode.replaceChild(newSprite, sprite);
 }
 
 async function comAnimation() {
-  var com = document.getElementById('comSprite');
-  var player = document.getElementById('playerSprite');
+  let com = document.getElementById('comSprite');
+  let player = document.getElementById('playerSprite');
 
   com.style.WebkitAnimation = 'commove 0.08s 1'; // Code for Chrome, Safari and Opera
   com.style.animation = 'commove 0.08s 1'; // Standard syntax
@@ -35,17 +35,16 @@ async function comAnimation() {
   player.style.animation = 'flash 0.1s 3'; // Standard syntax
 
   // Clone the sprite and delete the old one, to be able to animate again.
-  var sprite = com;
-  var newSprite = com.cloneNode(true);
+  let sprite = com;
+  let newSprite = com.cloneNode(true);
   sprite.parentNode.replaceChild(newSprite, sprite);
 
-  var sprite = player;
-  var newSprite = player.cloneNode(true);
+  sprite = player;
+  newSprite = player.cloneNode(true);
   sprite.parentNode.replaceChild(newSprite, sprite);
 }
 
 const NO_MOVES = 4;
-
 const initialState = {
   move: 0,
   player: {
@@ -76,23 +75,20 @@ const initialState = {
 };
 
 class PokeGame extends Component {
-  constructor(props) {
-    super(props);
-    this.state = initialState;
-  }
+  state = initialState;
 
   componentDidMount() {
     this.initializeGame();
   }
 
   static play(attackPlayer, defensePlayer, attackMove, playerAttacking) {
-    var damage = (2 * attackPlayer.level) / 5 + 2;
+    let damage = (2 * attackPlayer.level) / 5 + 2;
     // Pokemon damage stat
     damage *= attackPlayer.pokemon.stats[4].base_stat;
     // Pokemon attack stat
     damage = (damage * attackMove.power) / 75 + 2;
 
-    var modifier = Math.random() * (0.85 - 1.0) + 0.85;
+    const modifier = Math.random() * (0.85 - 1.0) + 0.85;
 
     const baseHealth = defensePlayer.pokemon.stats[5].base_stat;
 
@@ -102,7 +98,7 @@ class PokeGame extends Component {
       damage = clamp(damage * modifier, 0.3 * baseHealth);
     }
 
-    if (playerAttacking == true) {
+    if (playerAttacking) {
       let comHealth = document.getElementById('comHealth');
       comHealth.value -= damage; //Or whatever you want to do with it.
 
@@ -143,7 +139,7 @@ class PokeGame extends Component {
 
     const playerMove = () => {
       //Player's move
-      var computerDefenseHealth = PokeGame.play(
+      const computerDefenseHealth = PokeGame.play(
         this.state.player,
         this.state.computer,
         attackMove,
@@ -152,7 +148,7 @@ class PokeGame extends Component {
       playerAnimation();
       if (computerDefenseHealth < 0) {
         winner = this.state.player;
-        var com = document.getElementById('comSprite');
+        const com = document.getElementById('comSprite');
         com.style.WebkitAnimation = 'faint 1.5s 1'; // Code for Chrome, Safari and Opera
         com.style.animation = 'faint 1.5s 1'; // Standard syntax
         return computerDefenseHealth;
@@ -179,7 +175,7 @@ class PokeGame extends Component {
           enemyAttack: 'OPPONENT USED A SECRET ATTACK!',
         });
       }
-      var playerDefenseHealth = PokeGame.play(
+      const playerDefenseHealth = PokeGame.play(
         this.state.computer,
         this.state.player,
         attackMove,
@@ -191,7 +187,7 @@ class PokeGame extends Component {
 
       if (playerDefenseHealth < 0) {
         winner = this.state.computer;
-        var player = document.getElementById('playerSprite');
+        const player = document.getElementById('playerSprite');
         player.style.WebkitAnimation = 'faint 1.5s 1'; // Code for Chrome, Safari and Opera
         player.style.animation = 'faint 1.5s 1'; // Standard syntax
         return playerDefenseHealth;
@@ -208,14 +204,14 @@ class PokeGame extends Component {
     };
 
     if (playerTempo > computerTempo) {
-      var health = playerMove(true);
+      const health = playerMove(true);
       console.log(health);
       await sleep(1000);
       if (health >= 0) {
         computerMove();
       }
     } else {
-      var health = computerMove();
+      const health = computerMove();
       console.log(health);
       await sleep(1000);
       if (health >= 0) {
@@ -320,7 +316,7 @@ class PokeGame extends Component {
   }
 
   reset() {
-    this.state = initialState;
+    this.setState(initialState);
   }
 
   render() {
@@ -333,7 +329,12 @@ class PokeGame extends Component {
                 <div>
                   <h3>Your champion!</h3>
                   <div>
-                    <img src={this.state.player.sprite} className='player-img' id='playerSprite' />
+                    <img
+                      alt=''
+                      src={this.state.player.sprite}
+                      className='player-img'
+                      id='playerSprite'
+                    />
                     <br />
                     <h3 className='player-name'>{this.state.player.pokeName}</h3>
                   </div>
@@ -360,7 +361,12 @@ class PokeGame extends Component {
                 <div>
                   <h3>Your opponent!</h3>
                   <div>
-                    <img src={this.state.computer.sprite} className='enemy-img' id='comSprite' />
+                    <img
+                      alt=''
+                      src={this.state.computer.sprite}
+                      className='enemy-img'
+                      id='comSprite'
+                    />
                     <br />
                     <h3 className='player-name'>{this.state.computer.pokeName}</h3>
                     <div>
@@ -381,9 +387,9 @@ class PokeGame extends Component {
           <div>
             <h1>You won!</h1>
             <br />
-            <img src={fire} className='winner-img' />
-            <img src={eve} className='winner-img' />
-            <img src={saur} className='winner-img' />
+            <img alt='' src={fire} className='winner-img' />
+            <img alt='' src={eve} className='winner-img' />
+            <img alt='' src={saur} className='winner-img' />
             <br />
             <button className='end-button' onClick={this.props.action}>
               {'START NEW GAME'}
