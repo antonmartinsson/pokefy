@@ -1,8 +1,6 @@
 import stringSimilarity from 'string-similarity';
 import match from './genreTypes';
 
-const POKEAPI = 'https://pokeapi.co/api/v2';
-
 export function findBestMatch(genre) {
   return match[stringSimilarity.findBestMatch(genre, Object.keys(match)).bestMatch.target];
 }
@@ -60,20 +58,20 @@ export async function getArtistGenres(artistId) {
 
 async function getPokemonType(type) {
   console.log('get pokemon type');
-  const typeRes = await fetch(`${POKEAPI}/type/${type}`);
+  const typeRes = await fetch(`/pokemon/type/${type}/`);
   const json = await typeRes.json();
   return json;
 }
 
 async function getPokemonDetails(randPokemon) {
   console.log('get pokemon details');
-  const pokemonRes = await fetch(`${POKEAPI}/pokemon/${randPokemon}`);
+  const pokemonRes = await fetch(`/pokemon/pokemon/${randPokemon}/`);
   const json = await pokemonRes.json();
   return json;
 }
 
 export async function getMoveInformation(moveName) {
-  const moveRes = await fetch(`${POKEAPI}/move/${moveName}`);
+  const moveRes = await fetch(`/pokemon/move/${moveName}/`);
   return await moveRes.json();
 }
 

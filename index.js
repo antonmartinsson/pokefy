@@ -1,15 +1,20 @@
-require('dotenv').config();
+require('dotenv').config({ path: './.env.production' });
+const path = require('path');
 const express = require('express');
+const fetch = require('node-fetch');
 const bodyParser = require('body-parser');
 const SpotifyWebApi = require('spotify-web-api-node');
 const LocalStorage = require('node-localstorage').LocalStorage;
 const localStorage = new LocalStorage('./localStorage');
 
+const POKEAPI = 'https://pokeapi.co/api/v2';
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 const spotifyScopes = ['user-read-recently-played', 'user-modify-playback-state'];
-const redirectUri = 'http://localhost:3000';
+const redirectUri = (process.env.NODE_ENV = 'production'
+  ? 'https://pokefy-devx.herokuapp.com'
+  : 'http://localhost:3000');
 const state = 'randomstatelol';
 
 const spotifyApi = new SpotifyWebApi({
@@ -37,6 +42,7 @@ if (storedAuthData) {
   }, 3600 * 60);
 }
 
+app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -90,16 +96,15 @@ app.get('/spotify/play/:songId', async (req, res) => {
 });
 
 app.get('/spotify/get-track-features/:songId', async (req, res) => {
-    console.log('GET /spotify/get-track-features/' + req.params.songId);
-    const { songId } = req.params;
-    try {
-        const data = await spotifyApi.getAudioFeaturesForTrack(songId);
-        console.log(data);
-        res.status(200).send(data);
-    } catch(error) {
-        console.error('Error when fetching features', error);
-    }
-
+  console.log('GET /spotify/get-track-features/' + req.params.songId);
+  const { songId } = req.params;
+  try {
+    const data = await spotifyApi.getAudioFeaturesForTrack(songId);
+    console.log(data);
+    res.status(200).send(data);
+  } catch (error) {
+    console.error('Error when fetching features', error);
+  }
 });
 
 app.get('/spotify/random-song', async (req, res) => {
@@ -116,6 +121,49 @@ app.get('/spotify/random-song', async (req, res) => {
       console.error(err);
     }
   );
+});
+
+app.get('/pokemon/type/:type', async (req, res) => {
+  const { type } = req.params;
+  console.log(`GET /pokemon/type/${type}`);
+  try {
+    const pokemonRes = await fetch(`${POKEAPI}/type/${type}/`);
+    const json = await pokemonRes.json();
+    res.status(200).send(json);
+  } catch (error) {
+    console.error(error);
+    res.status(400);
+  }
+});
+
+app.get('/pokemon/pokemon/:name', async (req, res) => {
+  const { name } = req.params;
+  console.log(`GET /pokemon/pokemon/${name}`);
+  try {
+    const pokemonRes = await fetch(`${POKEAPI}/pokemon/${name}/`);
+    const json = await pokemonRes.json();
+    res.status(200).send(json);
+  } catch (error) {
+    console.error(error);
+    res.status(400);
+  }
+});
+
+app.get('/pokemon/move/:name', async (req, res) => {
+  const { name } = req.params;
+  console.log(`GET /pokemon/move/${name}`);
+  try {
+    const pokemonRes = await fetch(`${POKEAPI}/move/${name}/`);
+    const json = await pokemonRes.json();
+    res.status(200).send(json);
+  } catch (error) {
+    console.error(error);
+    res.status(400);
+  }
+});
+
+app.get('/*', (_, res) => {
+  res.sendFile(path.join(__dirname, '/client/build/index.html'));
 });
 
 app.listen(PORT, () => {
