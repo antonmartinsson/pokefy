@@ -93,6 +93,7 @@ app.get('/spotify/play/:songId', async (req, res) => {
   const { songId } = req.params;
   await spotifyApi.setRepeat({ state: 'track' });
   spotifyApi.play({ uris: ['spotify:track:' + songId] });
+  res.status(200);
 });
 
 app.get('/spotify/get-track-features/:songId', async (req, res) => {
@@ -158,7 +159,7 @@ app.get('/pokemon/move/:name', async (req, res) => {
     res.status(200).send(json);
   } catch (error) {
     console.error(error);
-    res.status(400);
+    res.status(200).send({});
   }
 });
 
