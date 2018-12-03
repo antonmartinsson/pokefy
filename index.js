@@ -81,12 +81,17 @@ app.get('/spotify/refresh/:token', async (req, res) => {
 
   console.log('Stored token:', refresh_token);
 
-  spotifyApi.setRefreshToken(refresh_token);
-  const data = await spotifyApi.refreshAccessToken();
-  console.log(data);
-  const { access_token } = data.body;
-  localStorage.setItem(access_token, refresh_token);
-  res.status(200).send({ access_token });
+  try {
+    spotifyApi.setRefreshToken(refresh_token);
+    const data = await spotifyApi.refreshAccessToken();
+    console.log(data);
+    const { access_token } = data.body;
+    localStorage.setItem(access_token, refresh_token);
+    res.status(200).send({ access_token });
+  } catch (error) {
+    console.error(error);
+    res.status(400).send({});
+  }
 });
 
 app.get('/spotify/recent-tracks', async (req, res) => {

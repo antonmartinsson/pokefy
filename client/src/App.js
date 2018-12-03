@@ -7,7 +7,7 @@ import './App.css';
 
 class App extends Component {
   state = {
-    gameState: 'login',
+    gameState: '',
     recentTracks: [],
     currentPokemon: null,
     opponentPokemon: null,
@@ -16,19 +16,7 @@ class App extends Component {
     playedTrackIds: {},
   };
 
-  componentDidMount() {
-    this.authorize();
-  }
-
-  async authorize() {
-    const storedToken = localStorage.getItem('ACCESS_TOKEN');
-    if (storedToken) {
-      await api.refreshToken();
-      this.refreshPeriodically();
-      this.moveToStart();
-      return;
-    }
-
+  async componentDidMount() {
     const url = new URLSearchParams(window.location.search);
     const authCallBackCode = url.get('code');
     const verificationState = url.get('state');
@@ -38,14 +26,26 @@ class App extends Component {
       // Request new access token
       await api.authorize(authCallBackCode);
       this.refreshPeriodically();
-      this.moveToStart();
+      this.moveToGrid();
       window.history.pushState(null, null, '/');
+      return;
+    }
+
+    this.moveToStart();
+  }
+
+  authorize = async () => {
+    const storedToken = localStorage.getItem('ACCESS_TOKEN');
+    if (storedToken) {
+      await api.refreshToken();
+      this.refreshPeriodically();
+      this.moveToGrid();
       return;
     }
 
     // Request Spotify login url from back-end and send user there.
     await api.login();
-  }
+  };
 
   refreshPeriodically() {
     // Get new token every hour
@@ -104,10 +104,13 @@ class App extends Component {
                 alt=''
                 className='pokeball'
                 src='https://i.imgur.com/a6eN9Ix.png'
-                onClick={this.moveToGrid}
+                onClick={this.authorize}
               />
             </div>
             <p className='pressPokeBall'>Press the Poké Ball to begin</p>
+            <p className='tip'>
+              Ensure you have Spotify running in the background for the best experience!
+            </p>
           </header>
         </div>
       );
@@ -149,6 +152,8 @@ class App extends Component {
         </div>
       );
     }
+
+    return null;
   }
 }
 
