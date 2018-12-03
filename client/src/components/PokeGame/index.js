@@ -269,9 +269,8 @@ class PokeGame extends Component {
     const playerTrackDetails = await api.getTrackFeatures(playerTrack.track.id);
     const opponentTrackDetails = await api.getTrackFeatures(opponentTrack.track.id);
 
-    const playerAttackSpeed = playerTrackDetails.body.tempo * playerPokemon.stats[0].base_stat;
-    const opponentAttackSpeed =
-      opponentTrackDetails.body.tempo * opponentPokemon.stats[0].base_stat;
+    const playerAttackSpeed = playerTrackDetails.tempo * playerPokemon.stats[0].base_stat;
+    const opponentAttackSpeed = opponentTrackDetails.tempo * opponentPokemon.stats[0].base_stat;
     console.log(playerAttackSpeed);
     console.log(opponentAttackSpeed);
 

@@ -1,6 +1,8 @@
 import stringSimilarity from 'string-similarity';
 import match from './genreTypes';
 
+let ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
+
 export function findBestMatch(genre) {
   return match[stringSimilarity.findBestMatch(genre, Object.keys(match)).bestMatch.target];
 }
@@ -25,7 +27,7 @@ const shuffleArray = arr =>
     .map(a => a[1]);
 
 export async function authorize(code) {
-  await fetch('/spotify/code', {
+  const res = await fetch('/spotify/gettokens', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -34,26 +36,70 @@ export async function authorize(code) {
       code,
     }),
   });
+  try {
+    const json = await res.json();
+    console.log(json);
+    localStorage.setItem('ACCESS_TOKEN', json.access_token);
+    ACCESS_TOKEN = json.access_token;
+  } catch (error) {
+    console.error('Something went wrong when getting tokens:');
+    console.error(error);
+  }
+}
+
+export async function refreshToken() {
+  const res = await fetch(`/spotify/refresh/${ACCESS_TOKEN}`);
+  if (res.status !== 200) {
+    console.log('Did not get refresh token, logging in again...');
+    localStorage.removeItem('ACCESS_TOKEN');
+    await login();
+    return;
+  }
+  const json = await res.json();
+  console.log('Got new access token:', json.access_token);
+  ACCESS_TOKEN = json.access_token;
 }
 
 export async function login() {
-  const res = await fetch('/spotify/auth');
+  const res = await fetch('/spotify/getauthurl');
+  console.log('GET AUTH URL', res);
   const authUrl = (await res.json()).authUrl;
   if (authUrl) {
     window.location = authUrl;
   }
 }
 
+export async function getRecentTracks() {
+  const data = await fetch(`/spotify/recent-tracks?access_token=${ACCESS_TOKEN}`);
+  const json = await data.json();
+  return json.items;
+}
+
 export async function getRandomSong() {
-  const res = await fetch('/spotify/random-song');
+  const res = await fetch(`/spotify/random-song?access_token=${ACCESS_TOKEN}`);
   const json = await res.json();
   return json;
 }
 
 export async function getArtistGenres(artistId) {
-  const res = await fetch('/spotify/get-genre/' + artistId);
+  const res = await fetch(`/spotify/artist/${artistId}?access_token=${ACCESS_TOKEN}`);
   const json = await res.json();
-  return json.body.genres;
+  console.log('ARTIST', json);
+  return json.genres;
+}
+
+export async function playSong(songId) {
+  await fetch(`/spotify/play/${songId}?access_token=${ACCESS_TOKEN}`);
+}
+
+export async function getTrackFeatures(songId) {
+  console.log('Get Features of the track');
+  console.log(songId);
+  const trackRes = await fetch(
+    `/spotify/get-track-features/${songId}?access_token=${ACCESS_TOKEN}`
+  );
+  const json = await trackRes.json();
+  return json;
 }
 
 async function getPokemonType(type) {
@@ -73,18 +119,6 @@ async function getPokemonDetails(randPokemon) {
 export async function getMoveInformation(moveName) {
   const moveRes = await fetch(`/pokemon/move/${moveName}/`);
   return await moveRes.json();
-}
-
-export async function playSong(songId) {
-  await fetch('/spotify/play/' + songId);
-}
-
-export async function getTrackFeatures(songId) {
-  console.log('Get Features of the track');
-  console.log(songId);
-  const trackRes = await fetch('/spotify/get-track-features/' + songId);
-  const json = await trackRes.json();
-  return json;
 }
 
 async function getPokemonFromGenre(genres) {

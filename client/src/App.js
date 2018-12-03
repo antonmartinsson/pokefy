@@ -21,23 +21,43 @@ class App extends Component {
   }
 
   async authorize() {
+    const storedToken = localStorage.getItem('ACCESS_TOKEN');
+    if (storedToken) {
+      await api.refreshToken();
+      this.refreshPeriodically();
+      this.moveToStart();
+      return;
+    }
+
     const url = new URLSearchParams(window.location.search);
     const authCallBackCode = url.get('code');
     const verificationState = url.get('state');
 
     if (authCallBackCode && verificationState) {
+      // The user has authorized this app and has been sent back.
+      // Request new access token
       await api.authorize(authCallBackCode);
+      this.refreshPeriodically();
+      this.moveToStart();
       window.history.pushState(null, null, '/');
       return;
     }
 
+    // Request Spotify login url from back-end and send user there.
     await api.login();
   }
 
+  refreshPeriodically() {
+    // Get new token every hour
+    setInterval(() => {
+      console.log('Auto refreshing token');
+      api.refreshToken();
+    }, 1000 * 60 * 60);
+  }
+
   getRecent = async () => {
-    const data = await fetch('/spotify/recent-tracks');
-    const json = await data.json();
-    this.setState({ recentTracks: json.body.items });
+    const tracks = await api.getRecentTracks();
+    this.setState({ recentTracks: tracks });
   };
 
   moveToGrid = () => {
@@ -72,6 +92,7 @@ class App extends Component {
 
   render() {
     const { gameState } = this.state;
+    console.log(gameState);
 
     if (gameState === 'login') {
       return (
