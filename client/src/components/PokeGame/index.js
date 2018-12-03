@@ -165,12 +165,13 @@ class PokeGame extends Component {
     const computerMove = () => {
       // Computer's move
       attackMove = this.state.computer.moves[Math.floor(Math.random() * NO_MOVES)];
+      console.log('Attack move:', attackMove);
 
-      if (attackMove.name) {
+      if (attackMove && attackMove.name) {
         this.setState({
           enemyAttack: 'OPPONENT USED ' + attackMove.name + '!',
         });
-      } else if (!attackMove.name) {
+      } else {
         this.setState({
           enemyAttack: 'OPPONENT USED A SECRET ATTACK!',
         });
