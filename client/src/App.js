@@ -37,10 +37,12 @@ class App extends Component {
   authorize = async () => {
     const storedToken = localStorage.getItem('ACCESS_TOKEN');
     if (storedToken) {
-      await api.refreshToken();
-      this.refreshPeriodically();
-      this.moveToGrid();
-      return;
+      const success = await api.refreshToken();
+      if (success) {
+        this.refreshPeriodically();
+        this.moveToGrid();
+        return;
+      }
     }
 
     // Request Spotify login url from back-end and send user there.

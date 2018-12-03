@@ -53,11 +53,12 @@ export async function refreshToken() {
     console.log('Did not get refresh token, logging in again...');
     localStorage.removeItem('ACCESS_TOKEN');
     await login();
-    return;
+    return false;
   }
   const json = await res.json();
   console.log('Got new access token:', json.access_token);
   ACCESS_TOKEN = json.access_token;
+  return true;
 }
 
 export async function login() {
